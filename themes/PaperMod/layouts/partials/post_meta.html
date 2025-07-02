@@ -1,7 +1,7 @@
 {{- $scratch := newScratch }}
 
 {{- if not .Date.IsZero -}}
-{{- $scratch.Add "meta" (slice (.Date | time.Format "2006年01月02日")) }}
+{{- $scratch.Add "meta" (slice (.Date | time.Format "2006-01-02 15:04:05")) }}
 {{- end }}
 
 {{- if (.Param "ShowWordCount") -}}

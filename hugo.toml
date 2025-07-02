@@ -73,8 +73,8 @@ pygmentsUseClasses = true
   weight = 10
 
 [[menu.main]]
-  name = "文章"
-  url = "/posts/"
+  name = "分类"
+  url = "/categories/"
   weight = 20
 
 [[menu.main]]
