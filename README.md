@@ -18,11 +18,8 @@
 ### 创建新文章
 
 ```bash
-# 创建新的技术文章
+# 创建新文章
 hugo new posts/your-post-title.md
-
-# 创建新的生活记录
-hugo new posts/life-your-title.md
 ```
 
 ### 构建静态文件

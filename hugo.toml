@@ -1,12 +1,12 @@
 baseURL = 'https://blog.mitrecx.top/'
 languageCode = 'zh-cn'
-title = '我的个人博客'
+title = 'Mitre Blog'
 theme = 'PaperMod'
 defaultContentLanguage = 'zh'
 
 # 基本设置
 [pagination]
-pagerSize = 10
+pagerSize = 20
 enableInlineShortcodes = true
 enableRobotsTXT = true
 buildDrafts = false
@@ -31,7 +31,7 @@ pygmentsUseClasses = true
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
-  ShowWordCount = true
+  ShowWordCount = false
   ShowToc = true
   TocOpen = true
   

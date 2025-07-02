@@ -4,6 +4,7 @@ draft = false
 title = 'Hello World'
 categories = ["技术分享"]
 tags = ["RAG", "AI", "机器学习"]
+ShowBreadCrumbs = false
 +++
 
 RAG，全称是 Retrieval-Augmented Generation（检索增强生成），是一种结合外部知识检索和语言模型生成能力的方法，用来提升问答或生成任务的效果，尤其在处理知识密集型任务（如文档问答、企业知识库问答）时非常有效。

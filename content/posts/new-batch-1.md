@@ -1,6 +1,6 @@
 ---
-title: "{{ replace .File.ContentBaseName "-" " " | title }}"
-date: {{ .Date }}
+title: "New Batch 1"
+date: 2025-07-02T23:00:19+08:00
 draft: false
 tags: ["标签"]
 categories: ["分类"]

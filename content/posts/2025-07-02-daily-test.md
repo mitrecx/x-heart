@@ -4,6 +4,7 @@ draft = false
 title = 'Daily Test'
 categories = ["生活"]
 tags = ["博客", "日常"]
+ShowBreadCrumbs = false
 +++
 
 当然可以！根据你的博客用途（软件技术分享 + 生活记录），我为你准备了几类风格不同的名字建议，方便你选择或启发灵感：

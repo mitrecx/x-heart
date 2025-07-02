@@ -6,6 +6,7 @@ tags: ["博客", "开始"]
 categories: ["生活"]
 author: "博主"
 description: "这是我博客的第一篇文章，介绍了博客的目的和内容方向。"
+ShowBreadCrumbs: false
 cover:
     image: "images/test/test2.jpg"
     alt: "欢迎图片"
