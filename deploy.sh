@@ -367,7 +367,7 @@ deploy_site() {
     # 检查部署结果
     if [ $DEPLOY_RESULT -eq 0 ]; then
         print_message $GREEN "部署成功！"
-        print_message $BLUE "网站地址: http://blog.mitrecx.top/"
+        print_message $BLUE "网站地址: https://blog.mitrecx.top/"
         
         # 静默验证文件名编码
         if verify_deployment; then

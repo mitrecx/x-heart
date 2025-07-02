@@ -1,4 +1,4 @@
-baseURL = 'http://blog.mitrecx.top/'
+baseURL = 'https://blog.mitrecx.top/'
 languageCode = 'zh-cn'
 title = '我的个人博客'
 theme = 'PaperMod'
