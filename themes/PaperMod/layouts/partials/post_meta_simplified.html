@@ -1,0 +1,7 @@
+{{- if not .Date.IsZero -}}
+{{- .Date | time.Format "2006年01月02日" -}}
+{{- end -}}
+{{- if (.Param "ShowWordCount") -}}
+{{- if not .Date.IsZero }}&nbsp;·&nbsp;{{ end -}}
+{{- .WordCount }} 字
+{{- end -}} 

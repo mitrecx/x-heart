@@ -1,0 +1,60 @@
+# Hugo博客部署配置模板文件
+# 使用说明：
+# 1. 复制此文件为 deploy.config: cp deploy.config.template deploy.config
+# 2. 修改 deploy.config 中的配置项为你的真实服务器信息
+# 3. deploy.config 文件不会被提交到 git，保护你的服务器信息
+
+# ================================
+# 服务器配置 (必填)
+# ================================
+SERVER_USER="root"                    # 服务器用户名，如: root, ubuntu, www-data
+SERVER_HOST="123.456.789.0"          # 服务器IP地址或域名，如: 192.168.1.100, example.com
+SERVER_PATH="/var/www/html/"          # 服务器网站目录路径，如: /var/www/html/, /home/user/public_html/
+SSH_PORT="22"                         # SSH端口，默认22，如果修改过请填写实际端口
+
+# ================================
+# Hugo构建配置
+# ================================
+HUGO_ENV="production"                 # Hugo环境: production(生产) / development(开发)
+PUBLIC_DIR="public"                   # 构建输出目录，默认为 public
+
+# ================================
+# 部署选项
+# ================================
+BACKUP_BEFORE_DEPLOY="true"          # 部署前是否备份服务器文件: true/false
+RSYNC_EXCLUDE_FILE=".rsyncignore"    # rsync排除文件列表
+ENABLE_GZIP="true"                   # 是否启用gzip压缩: true/false
+
+# ================================
+# 通知配置 (可选)
+# ================================
+ENABLE_NOTIFICATION="false"          # 是否启用部署通知: true/false
+WEBHOOK_URL=""                       # Webhook URL，支持钉钉、企业微信等
+NOTIFICATION_MESSAGE="博客部署完成"   # 通知消息内容
+
+# ================================
+# Git配置 (可选)
+# ================================
+AUTO_COMMIT="false"                  # 部署前是否自动提交更改: true/false
+COMMIT_MESSAGE="Auto deploy $(date)" # 自动提交信息
+
+# ================================
+# 配置示例
+# ================================
+# 示例1: 阿里云ECS服务器
+# SERVER_USER="root"
+# SERVER_HOST="47.100.200.300"
+# SERVER_PATH="/var/www/html/"
+# SSH_PORT="22"
+
+# 示例2: 腾讯云服务器
+# SERVER_USER="ubuntu"
+# SERVER_HOST="blog.example.com"
+# SERVER_PATH="/home/ubuntu/www/"
+# SSH_PORT="2222"
+
+# 示例3: 共享主机
+# SERVER_USER="your_username"
+# SERVER_HOST="ftp.yourhost.com"
+# SERVER_PATH="/public_html/"
+# SSH_PORT="22" 

@@ -253,12 +253,76 @@
     font-weight: normal;
 }
 
+/* 新的布局容器 */
+.post-content-container {
+    display: flex;
+    gap: 2rem;
+    position: relative;
+    transition: gap 0.3s ease;
+}
+
+/* 左侧TOC边栏 */
+.toc-sidebar {
+    flex: 0 0 250px;
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    transition: all 0.3s ease;
+}
+
+/* 调整TOC样式 */
 .toc {
-    margin: 0 2px 40px 2px;
+    margin: 0;
     border: 1px solid var(--border);
     background: var(--code-bg);
     border-radius: var(--radius);
     padding: 0.4em;
+    font-size: 14px;
+}
+
+/* 内容区域调整 */
+.post-content.with-toc {
+    flex: 1;
+    min-width: 0;
+    transition: all 0.3s ease;
+}
+
+/* 页面放大或中等屏幕时隐藏TOC */
+@media screen and (max-width: 1300px) {
+    .toc-sidebar {
+        display: none;
+    }
+    
+    .post-content.with-toc {
+        flex: 1;
+        max-width: 100%;
+        margin-left: 0;
+    }
+    
+    .post-content-container {
+        gap: 0;
+    }
+}
+
+/* 移动设备响应式 */
+@media screen and (max-width: 768px) {
+    .post-content-container {
+        flex-direction: column;
+    }
+    
+    .toc-sidebar {
+        position: static;
+        flex: none;
+        order: -1;
+        max-height: none;
+        display: block; /* 移动设备上重新显示TOC */
+    }
+    
+    .toc {
+        margin-bottom: 1.5rem;
+    }
 }
 
 .dark .toc {
@@ -267,8 +331,10 @@
 
 .toc details summary {
     cursor: zoom-in;
-    margin-inline-start: 10px;
+    margin-inline-start: 5px;
     user-select: none;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .toc details[open] summary {
@@ -281,13 +347,27 @@
 }
 
 .toc .inner {
-    margin: 5px 20px 0;
-    padding: 0 10px;
+    margin: 5px 10px 0;
+    padding: 0 5px;
     opacity: 0.9;
 }
 
 .toc li ul {
-    margin-inline-start: var(--gap);
+    margin-inline-start: calc(var(--gap) / 2);
+}
+
+.toc a {
+    display: block;
+    padding: 4px 0;
+    color: var(--secondary);
+    text-decoration: none;
+    line-height: 1.3;
+    border-radius: 4px;
+    transition: color 0.2s ease;
+}
+
+.toc a:hover {
+    color: var(--primary);
 }
 
 .toc summary:focus {

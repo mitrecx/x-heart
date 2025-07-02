@@ -85,9 +85,11 @@
   </div>
   {{- end }}
   {{- if not (.Param "hideMeta") }}
+  {{- if ne $class "first-entry" }}
   <footer class="entry-footer">
-    {{- partial "post_meta.html" . -}}
+    {{- partial "post_meta_simplified.html" . -}}
   </footer>
+  {{- end }}
   {{- end }}
   <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
 </article>

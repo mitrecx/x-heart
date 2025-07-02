@@ -1,0 +1,45 @@
+# rsync排除文件列表
+# 在部署时这些文件/目录不会被上传到服务器
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# 开发文件
+.git/
+.gitignore
+node_modules/
+*.scss
+*.sass
+*.less
+
+# Hugo相关
+content/
+themes/
+static/
+layouts/
+archetypes/
+data/
+i18n/
+hugo.toml
+config.toml
+config.yaml
+
+# 部署相关
+deploy.sh
+deploy.config
+.rsyncignore
+README.md
+
+# 备份文件
+*.bak
+*.backup
+*~
+
+# IDE文件
+.vscode/
+.idea/
+*.swp
+*.swo 

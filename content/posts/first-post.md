@@ -7,7 +7,7 @@ categories: ["生活"]
 author: "博主"
 description: "这是我博客的第一篇文章，介绍了博客的目的和内容方向。"
 cover:
-    image: "images/welcome.jpg"
+    image: "images/test/test2.jpg"
     alt: "欢迎图片"
     caption: "欢迎来到我的个人博客"
 ---

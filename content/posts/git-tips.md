@@ -7,7 +7,7 @@ categories: ["技术分享"]
 author: "博主"
 description: "分享一些日常开发中常用的Git技巧，提高开发效率。"
 cover:
-    image: "images/git-tips.png"
+    image: "images/test/test.webp"
     alt: "Git技巧"
     caption: "让Git使用更高效"
 ---

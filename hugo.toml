@@ -1,4 +1,4 @@
-baseURL = 'https://example.org/'
+baseURL = 'http://blog.mitrecx.top/'
 languageCode = 'zh-cn'
 title = '我的个人博客'
 theme = 'PaperMod'
@@ -20,6 +20,7 @@ pygmentsUseClasses = true
   env = "production"
   description = "个人技术分享与生活记录博客"
   author = "博主"
+  disableSpecial1stPost = true
   
   # 主页模式设置
   mode = "list" # 列表模式
@@ -32,7 +33,7 @@ pygmentsUseClasses = true
   ShowCodeCopyButtons = true
   ShowWordCount = true
   ShowToc = true
-  TocOpen = false
+  TocOpen = true
   
   # 关闭功能
   disableScrollToTop = false
@@ -48,14 +49,14 @@ pygmentsUseClasses = true
   images = ["images/papermod-cover.png"]
   
   # 首页信息
-  [params.homeInfoParams]
-    Title = "欢迎来到我的博客"
-    Content = "这里分享技术心得与生活感悟"
+  # [params.homeInfoParams]
+  #   Title = "欢迎来到我的博客"
+  #   Content = "这里分享技术心得与生活感悟"
   
   # 社交链接（可根据需要添加）
-  [[params.socialIcons]]
-    name = "github"
-    url = "https://github.com/"
+  # [[params.socialIcons]]
+  #   name = "github"
+  #   url = "https://github.com/"
   
   # 不启用搜索功能
   # [params.fuseOpts]
