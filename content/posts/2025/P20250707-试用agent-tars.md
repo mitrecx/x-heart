@@ -18,12 +18,12 @@ cover:
 
 不过 UI-TARS-desktop 是 [开源](https://github.com/bytedance/UI-TARS-desktop) 的.
 
-`TARS*` 目前包括[两个项目](https://github.com/bytedance/UI-TARS-desktop?tab=readme-ov-file#introduction)：<span style="color:blue">Agent TARS</span> 和 <span style="color:blue">UI-TARS Desktop</span>: 
-- <span style="color:blue">Agent TARS</span> 是一个 GUI Agent, 运行时会启动一个本地服务, 能通过浏览器访问, 提供了访问 本地终端, 浏览器, 本地文件 的能力.
+`TARS*` 目前包括[两个项目](https://github.com/bytedance/UI-TARS-desktop?tab=readme-ov-file#introduction)：<span style="color:#FF8800">Agent TARS</span> 和 <span style="color:#FF8800">UI-TARS Desktop</span>: 
+- <span style="color:#FF8800">Agent TARS</span> 是一个 GUI Agent, 运行时会启动一个本地服务, 能通过浏览器访问, 提供了访问 本地终端, 浏览器, 本地文件 的能力.
 
-- <span style="color:blue">UI-TARS Desktop</span> 是一个提供了 native GUI Agent 能力的桌面应用. 它可以像人类一下操作电脑(鼠标, 键盘).  
+- <span style="color:#FF8800">UI-TARS Desktop</span> 是一个提供了 native GUI Agent 能力的桌面应用. 它可以像人类一下操作电脑(鼠标, 键盘).  
 
-安装方法在github和官网有详细说明, 这里不赘述.
+安装方法在github和官网有详细说明, 下面直接开测.
  
 
 ## 测试 Agent TARS
@@ -80,6 +80,7 @@ Computer Use 需要通过 [UI-TARS-desktop](https://github.com/bytedance/UI-TARS
 
 但是让 `UI TARS` 整理支付宝账单, 并做一个直方图, 它就有点费劲:   
 它通过 WPS 打开 csv 文件, 然后开始用 WPS 内置的画图工具画图, 然而它 截图(snapshot)->操作(action) 循环了 50+ 次, 花了 7+ 分钟, 还没完成.  
+
 因为我是用的是 "Local Computer" 模式, `UI TARS` 会接管我的电脑, 导致我无法使用, 所以我就没有等它测试完了...   
 
 现在看来, "Remote Computer" 模式更适合 Computer Use.

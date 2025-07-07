@@ -1,0 +1,77 @@
+<style>
+/* 自定义代码块样式 - 适应主题模式 */
+
+/* 浅色主题代码块样式 */
+:root {
+    --custom-code-bg: #f6f8fa;
+    --custom-code-color: #24292e;
+    --custom-code-border: #e1e4e8;
+}
+
+/* 深色主题代码块样式 */
+.dark {
+    --custom-code-bg: #0d1117;
+    --custom-code-color: #e6edf3;
+    --custom-code-border: #30363d;
+}
+
+/* 覆盖代码块背景色和文字颜色 */
+.chroma,
+.bg {
+    background-color: var(--custom-code-bg) !important;
+    color: var(--custom-code-color) !important;
+    border: 1px solid var(--custom-code-border) !important;
+    border-radius: 6px !important;
+    padding: 16px !important;
+}
+
+/* 行号样式 */
+.chroma .lnt, 
+.chroma .ln {
+    color: var(--secondary) !important;
+    background-color: transparent !important;
+}
+
+/* 行高亮背景 */
+.chroma .hl {
+    background-color: var(--custom-code-border) !important;
+}
+
+/* 内联代码样式 */
+code:not(.chroma code) {
+    background-color: var(--code-bg) !important;
+    color: var(--content) !important;
+    padding: 2px 4px !important;
+    border-radius: 3px !important;
+    font-size: 0.9em !important;
+}
+
+/* 确保代码块中的特定语法高亮在浅色主题下可读 */
+:root .chroma .c,
+:root .chroma .c1,
+:root .chroma .cm,
+:root .chroma .cs {
+    color: #6a737d !important; /* 浅色主题注释颜色 */
+}
+
+:root .chroma .k,
+:root .chroma .kd,
+:root .chroma .kn,
+:root .chroma .kp,
+:root .chroma .kr,
+:root .chroma .kt {
+    color: #d73a49 !important; /* 浅色主题关键字颜色 */
+}
+
+:root .chroma .s,
+:root .chroma .s1,
+:root .chroma .s2,
+:root .chroma .sb,
+:root .chroma .sc {
+    color: #032f62 !important; /* 浅色主题字符串颜色 */
+}
+
+:root .chroma .nf {
+    color: #6f42c1 !important; /* 浅色主题函数名颜色 */
+}
+</style> 
