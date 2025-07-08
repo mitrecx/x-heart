@@ -27,15 +27,16 @@ cover:
  
 
 ## 测试 Agent TARS
-`Agent TARS` 目前只支持 3 中模型:
+`Agent TARS` 目前只支持 3 种模型:
 1. 字节跳动的 Seed1.5-VL(doubao-1-5-thinking-vision-pro-250428)
 2. Claude 3.7 Sonnet
-3. GPT-4o
+3. GPT-4o  
+
 我用 豆包模型 进行测试.
 
-### 本地浏览器（Browser Use）
-测试一:   
-在Boss直聘上搜索招聘信息, 并整理到excel表格中. 提示词如下:
+### 浏览器使用（Browser Use）
+#### 测试一   
+提示词:  
 ```
 请你去Boss直聘网站上搜索"Java开发工程师", 并把相关的招聘信息整理到excel表格中, 只要保留前50条记录即可
 ```
@@ -44,12 +45,12 @@ cover:
 
 过程中, agent-tars 打开了一个 Chrome 浏览器页面, 输出Boss直聘的官网, 轻松地通过了人机验证, 最终把搜索到的招聘信息统计好放在本地.
 
-我自己最近在做一个小项目 JobPilot: 通过AI在各大招聘网站上搜索招聘信息, 并根据用户的简历推荐最相关的工作, 如果推荐的好的话, 真的可以给求职者省很多时间. 
+说句题外话, 我自己最近在做一个小项目 JobPilot: 通过爬虫在各大招聘网站上爬取招聘信息, 然后用AI分析简历和招聘信息的相关性并推荐工作.    
 然而, Boss直聘的人机验证, 我搞了两天都没解决, agent-tars 提供了一个很好的思路, 传统的规避反爬虫机制不好使, LLM 也解决不了, 可以考虑 VLM.
 
 
-测试二:  
-提示词如下:  
+#### 测试二
+提示词:  
 ```
 打开网易云音乐, 并随机播放一首歌
 ```
@@ -73,7 +74,7 @@ agent-tars 一开始说它看不见 bill 目录... 后来我改了目录, 它还
 
 ## 测试 UI TARS
 
-### 本地电脑（Computer Use）
+### 电脑使用（Computer Use）
 Computer Use 需要通过 [UI-TARS-desktop](https://github.com/bytedance/UI-TARS-desktop) 使用.  
 让 `UI TARS` "打开网易云音乐, 并放一首歌", 它可以完成:  
 ![放音乐](/images/2025/P20250707-agent-tars-3.png)
@@ -89,9 +90,10 @@ Computer Use 需要通过 [UI-TARS-desktop](https://github.com/bytedance/UI-TARS
 
 ## 总结
 `Agent TARS` 基于视觉的 上网 和 终端执行命令 能力很强, 但 文件操作/分析 能力还有待提高.  
-此外, 虽然 `Agent TARS` 是开源免费的, 但是背后的 VML 是收费的, 我用豆包的大模型, 测试上面那几个案例竟然用掉了 260w+ tokens, 花了 6+ 块钱! 有点贵!!!
+此外, 虽然 `Agent TARS` 是开源免费的, 但是背后的 VLM 是收费的, 我用豆包的大模型, 测试上面那几个案例竟然用掉了 260w+ tokens, 花了 6+ 块钱! 有点贵!!!
 
 
 `UI-TARS Desktop` 可以做一下简单的任务, 比如修改一个系统/软件配置, 打开软件, 使用软件, 但是更复杂的任务可能无法完成, 或者完成比较慢.   
 
-在 2024 年 Anthropic 就提出了 [Computer Use](https://www.anthropic.com/news/developing-computer-use), 到如今过去不到 1 年时间, 开源的闭源的通用 AI Agent 都可以干一些事情了, 虽然不完美, 但是发展速度很快. 或许几年以后, Agent 就能像人一样但更高效地操作所有电子设备了...
+在 2024 年 Anthropic 就提出了 [Computer Use](https://www.anthropic.com/news/developing-computer-use), 到如今过去不到 1 年时间, 闭源/开源的通用 AI Agent 都可以干一些事情了, 虽然不完美, 但是发展速度很快.   
+或许几年以后, Agent 就能接管很多电子设备了.
