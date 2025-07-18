@@ -90,9 +90,9 @@ pygmentsUseClasses = true
 # 语法高亮配置
 [markup]
   [markup.highlight]
-    style = "github"
-    lineNos = true
-    lineNumbersInTable = true
+    style = "native"
+    lineNos = false
+    lineNumbersInTable = false
     noClasses = false
   
   [markup.goldmark]

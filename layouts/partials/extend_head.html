@@ -1,77 +1,130 @@
 <style>
-/* 自定义代码块样式 - 适应主题模式 */
+/* 重置并清理代码块样式 - 主题适配 */
 
-/* 浅色主题代码块样式 */
-:root {
-    --custom-code-bg: #f6f8fa;
-    --custom-code-color: #24292e;
-    --custom-code-border: #e1e4e8;
-}
-
-/* 深色主题代码块样式 */
-.dark {
-    --custom-code-bg: #0d1117;
-    --custom-code-color: #e6edf3;
-    --custom-code-border: #30363d;
-}
-
-/* 覆盖代码块背景色和文字颜色 */
+/* 彻底重置所有代码块相关的背景和边框 */
+.post-content .highlight:not(table),
+.post-content .highlight,
+.post-content pre,
+.post-content pre code,
 .chroma,
-.bg {
-    background-color: var(--custom-code-bg) !important;
-    color: var(--custom-code-color) !important;
-    border: 1px solid var(--custom-code-border) !important;
-    border-radius: 6px !important;
+div.highlight {
+    background: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+/* 定义主题变量 */
+:root {
+    --code-bg-custom: #f8f9fa;
+    --code-text-custom: #24292e;
+    --code-border-custom: #e1e4e8;
+    --code-comment: #6a737d;
+    --code-keyword: #d73a49;
+    --code-string: #032f62;
+    --code-function: #6f42c1;
+    --code-number: #005cc5;
+    --code-builtin: #e36209;
+}
+
+.dark {
+    --code-bg-custom: #0d1117;
+    --code-text-custom: #e6edf3;
+    --code-border-custom: #30363d;
+    --code-comment: #7d8590;
+    --code-keyword: #ff7b72;
+    --code-string: #a5d6ff;
+    --code-function: #d2a8ff;
+    --code-number: #79c0ff;
+    --code-builtin: #ffa657;
+}
+
+/* 仅为最外层的highlight div设置样式 */
+.post-content div.highlight {
+    background: var(--code-bg-custom) !important;
+    color: var(--code-text-custom) !important;
+    border: 1px solid var(--code-border-custom) !important;
+    border-radius: 8px !important;
     padding: 16px !important;
+    margin: 1.5em 0 !important;
+    overflow-x: auto !important;
+    position: relative !important;
 }
 
-/* 行号样式 */
-.chroma .lnt, 
-.chroma .ln {
-    color: var(--secondary) !important;
-    background-color: transparent !important;
-}
-
-/* 行高亮背景 */
-.chroma .hl {
-    background-color: var(--custom-code-border) !important;
+/* 确保内部pre和code无额外样式 */
+.post-content div.highlight pre,
+.post-content div.highlight pre code {
+    background: transparent !important;
+    color: inherit !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    display: block !important;
 }
 
 /* 内联代码样式 */
-code:not(.chroma code) {
-    background-color: var(--code-bg) !important;
+.post-content code:not(.chroma code):not(pre code) {
+    background: var(--code-bg) !important;
     color: var(--content) !important;
-    padding: 2px 4px !important;
-    border-radius: 3px !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
     font-size: 0.9em !important;
+    border: 1px solid var(--border) !important;
+    font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !important;
 }
 
-/* 确保代码块中的特定语法高亮在浅色主题下可读 */
-:root .chroma .c,
-:root .chroma .c1,
-:root .chroma .cm,
-:root .chroma .cs {
-    color: #6a737d !important; /* 浅色主题注释颜色 */
+/* 语法高亮颜色 */
+.chroma .c, .chroma .c1, .chroma .cm, .chroma .cs {
+    color: var(--code-comment) !important;
+    font-style: italic !important;
 }
 
-:root .chroma .k,
-:root .chroma .kd,
-:root .chroma .kn,
-:root .chroma .kp,
-:root .chroma .kr,
-:root .chroma .kt {
-    color: #d73a49 !important; /* 浅色主题关键字颜色 */
+.chroma .k, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt {
+    color: var(--code-keyword) !important;
+    font-weight: bold !important;
 }
 
-:root .chroma .s,
-:root .chroma .s1,
-:root .chroma .s2,
-:root .chroma .sb,
-:root .chroma .sc {
-    color: #032f62 !important; /* 浅色主题字符串颜色 */
+.chroma .s, .chroma .s1, .chroma .s2, .chroma .sb, .chroma .sc, 
+.chroma .sd, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx {
+    color: var(--code-string) !important;
 }
 
-:root .chroma .nf {
-    color: #6f42c1 !important; /* 浅色主题函数名颜色 */
+.chroma .nf, .chroma .fm {
+    color: var(--code-function) !important;
+    font-weight: bold !important;
+}
+
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .mo {
+    color: var(--code-number) !important;
+}
+
+.chroma .nb, .chroma .bp {
+    color: var(--code-builtin) !important;
+}
+
+/* 确保所有其他chroma元素继承正确的颜色 */
+.chroma * {
+    background: transparent !important;
+}
+
+/* 复制按钮样式 */
+.copy-code {
+    background: rgba(0, 0, 0, 0.7) !important;
+    color: white !important;
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+}
+
+.dark .copy-code {
+    background: rgba(255, 255, 255, 0.8) !important;
+    color: black !important;
+}
+
+/* 确保没有其他元素干扰 */
+.highlight pre.chroma {
+    background: transparent !important;
 }
 </style> 

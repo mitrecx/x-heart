@@ -24,7 +24,7 @@ cover:
 - <span style="color:#FF8800">UI-TARS Desktop</span> 是一个提供了 native GUI Agent 能力的桌面应用. 它可以像人类一下操作电脑(鼠标, 键盘).  
 
 安装方法在github和官网有详细说明, 下面直接开测.
- 
+
 
 ## 测试 Agent TARS
 `Agent TARS` 目前只支持 3 种模型:
