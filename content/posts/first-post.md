@@ -1,7 +1,7 @@
 ---
 title: "欢迎来到我的博客"
 date: 2024-01-15T10:00:00+08:00
-draft: false
+draft: true
 tags: ["博客", "开始"]
 categories: ["生活"]
 author: "博主"

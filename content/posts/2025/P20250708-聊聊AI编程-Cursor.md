@@ -2,7 +2,7 @@
 title: "聊聊 AI 编程 - Cursor"
 date: 2025-07-08T09:28:42+08:00
 draft: false
-tags: ["AI"]
+tags: ["AI", "编程"]
 categories: ["AI"]
 author: "Mitre"
 ShowBreadCrumbs: false
