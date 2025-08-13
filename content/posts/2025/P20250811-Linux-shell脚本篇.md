@@ -7,13 +7,28 @@ categories: ["Linux"]
 author: "Mitre"
 ShowBreadCrumbs: false
 cover:
-    image: "images/2025/P20250811-linux-corver.png"
-    alt: "图片描述"
-    caption: "图片说明"
+    image: "images/2025/P20250812-linux-operator-corver.png"
 ---
 
 平时写 Java, Python, 甚至一些前端代码. 但最近工作上要写 shell 脚本, 发现有些生疏了, 这篇文章记录一些基本的 shell 脚本写法, 偶尔翻翻, 加深记忆.   
-因为此文目的是复习 **常用的** shell 脚本写法, 所以文中不会抠细节, 不会覆盖特别全.  
+因为此文目的是复习 **常用的** shell 脚本写法, 所以文中不会很细节.  
+
+## set -euo pipefail
+```bash
+set -euo pipefail
+```
+是三个 set 选项组合在一起，用来让脚本执行时更严格、更安全。  
+
+`set -e` 作用: 当任何命令返回 **非零状态码（执行失败）** 时，立刻退出整个脚本。  
+默认情况下，Bash 脚本就算中间某个命令失败，也会继续执行。  
+
+
+`set -u` 作用: 当脚本中使用未定义的变量时，立即报错并退出。     
+默认情况下，使用未定义变量会被当成空字符串处理，不会报错。  
+
+`set -o pipefail` 作用: 让管道 (|) 命令在任意一环节失败时，都返回失败状态码。  
+默认情况下，管道命令的返回值是最后一个命令的返回值。 如果前面命令失败，但最后一个命令成功，脚本也会认为成功，这是有风险的。  
+开启 `pipefail` 后，管道中只要有一个命令失败，整个管道就会被视为失败。  
 
 
 ## 控制语句
@@ -208,8 +223,19 @@ echo "第一步"; echo "第二步"
 |---|---|---|
 |=|	equal to|	[ "$str1" = "$str2" ]|
 |!=|	not equal to|	[ "$str1" != "$str2" ]|
+|==|	可以匹配通配符, 仅 `[[ ]]` 支持|	[[ "hello" == h* ]] |
+|=\~|	可以匹配正则, 仅 `[[ ]]` 支持|	[[ "abc123" =\~ ^[a-z]+[0-9]+$ ]]|
 |-z|	**string is empty**|	[ -z "$str" ]|
 |-n|	**string is not empty**|	[ -n "$str" ]|
+
+例子:  
+```bash
+# 模式匹配
+[[ "hello" == h* ]] && echo "matched"  # 输出 matched  
+
+# 正则匹配
+[[ "abc123" =~ ^[a-z]+[0-9]+$ ]] && echo "regex matched"
+```
 
 ### 数值比较运算符:  
 | Operator| 	Meaning| 	Example| 
@@ -246,18 +272,6 @@ Operator|	Meaning|	Example
 
 • `[ ]` 中使用 `-a` (AND) 和 `-o` (OR) 组合条件, 可读性差且容易出错。  
 • `[[ ]]` 中可以直接使用 `&&` 和 `||`。
-
-###  模式匹配与正则
-• `[ ]` 不支持通配符匹配 (仅支持字符串字面比较)。  
-• `[[ ]]` 支持模式匹配 (`==` 可以匹配通配符, `=~` 可以匹配正则)。  
-例子:  
-```bash
-# 模式匹配
-[[ "hello" == h* ]] && echo "matched"  # 输出 matched  
-
-# 正则匹配
-[[ "abc123" =~ ^[a-z]+[0-9]+$ ]] && echo "regex matched"
-```
 
 ## 函数 
 
@@ -571,8 +585,84 @@ mapfile -t arr < filename.txt
 readarray -t arr < filename.txt
 ```
 
+## 环境变量 (environment variables)
+环境变量 (environment variables) 是一种在系统运行过程中存储配置信息的机制，它们以 `键=值` 的形式存在，用于控制 Shell 行为、影响系统程序的运行，或者在进程之间传递信息。  
 
-## 脚本中常用的命令
+常见的系统环境变量
+变量名|	作用
+---|---
+PATH|	命令搜索路径，Shell 会按此路径查找可执行文件
+HOME|	当前用户的主目录
+USER|	当前登录用户名
+SHELL|	当前使用的 Shell 类型
+LANG|	系统语言与字符编码
+PWD|	当前工作目录路径
+HISTSIZE|	Shell 历史命令记录条数
+PS1|	主提示符格式
+
+查看环境变量
+```bash
+env         # 显示所有环境变量
+printenv    # 类似 env，通常用于脚本中
+set         # 显示当前 Shell 的所有变量（包括环境变量和 Shell 变量）
+echo $PATH  # 查看某个环境变量的值
+```
+
+定义与修改环境变量
+```bash
+# 先定义变量, 后导出为环境变量
+VAR_NAME="value"
+export VAR_NAME  # 让它成为环境变量
+
+# 直接定义并导出
+export VAR_NAME="value"
+
+# 修改已有变量
+export PATH=$PATH:/opt/bin
+
+# 删除环境变量
+unset VAR_NAME
+```
+
+要让环境变量在登录时自动生效，需要将定义写入配置文件：  
+文件|	作用范围
+---|---
+~/.bashrc|	仅当前用户、交互式 Shell
+~/.bash_profile|	仅当前用户，登录时生效
+/etc/profile|	所有用户，登录时生效
+/etc/bashrc|	所有用户，交互式 Shell
+
+例子:  
+```bash
+echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+source ~/.bashrc
+```
+
+`source` 主要作用是 在当前 Shell 会话中执行指定脚本，而不是启动一个新的子 Shell。  
+与直接执行脚本 `bash filename` 的区别是：不创建子 Shell，所有 变量、函数 和 环境修改 都会影响当前 Shell。  
+```bash
+source 脚本文件
+
+# 简写
+. 脚本文件
+```
+例子:  
+```bash
+# 文件 env.sh 内容
+export MYVAR="Hello"
+v_name="abby"
+
+# 当前 shell 中执行
+source env.sh
+echo $MYVAR   # 输出 Hello
+echo $v_name  # 输出 abby
+```
+注意区别:  
+- 环境变量 不仅在当前 Shell 可用，还会 **传递给该 Shell 启动的子进程**。    
+- 普通变量 没有 export，**只在当前 Shell 可用**，子进程无法访问。
+
+
+## 其他
 
 ### read
 `read` 用来从标准输入（stdin）读取一行输入，并赋值给一个或多个变量.  
@@ -625,13 +715,13 @@ do
 done < data.csv
 ```
 
-## `$` 符号
+### `$` 符号
 位置参数（arguments）:  
 
 变量|	未加引号|	加双引号
 ---|---|---
 $@|	$1 $2 $3 …|	"$1" "$2" "$3" …（每个参数单独保留）
-$*|	$1 $2 $3 …|	"$1 $2 $3"（合并成一个整体）
+`$*`|	$1 $2 $3 …|	"$1 $2 $3"（合并成一个整体）
 
 
 例子:  
@@ -640,8 +730,11 @@ $*|	$1 $2 $3 …|	"$1 $2 $3"（合并成一个整体）
 for arg in $@; do echo "[$arg]"; done
 echo "----------"
 for arg in "$@"; do echo "[$arg]"; done
+echo "======================"
+for arg in $*; do echo "[$arg]"; done
+echo "----------"
+for arg in "$*"; do echo "[$arg]"; done
 
-[josie@MyJosie ~]$
 [josie@MyJosie ~]$ ./script.sh "a b" c d
 [a]
 [b]
@@ -651,6 +744,13 @@ for arg in "$@"; do echo "[$arg]"; done
 [a b]
 [c]
 [d]
+======================
+[a]
+[b]
+[c]
+[d]
+----------
+[a b c d]
 ```
 
 `$` 开头的特殊变量汇总:  
@@ -660,8 +760,8 @@ $0|	当前脚本的名称（包含路径）
 $1| $2 …	第 1、2… 个位置参数
 $#|	位置参数的个数	
 $@|	所有参数（逐个独立展开，常配合 "$@" 用）
-$*|	所有参数（作为一个整体，配合引号时合并成一个字符串）
-$$|	当前 Shell 的 PID
+`$*`|	所有参数（作为一个整体，配合引号时合并成一个字符串）
+`$$`|	当前 Shell 的 PID
 $!|	最近后台进程的 PID
 $?|	上一个命令的退出状态
 
@@ -687,8 +787,20 @@ long_task &  # 后台执行 long_task
 作业号：用 jobs 查看（如 [1]）
 进程号（PID）：可以用 `ps` 获取, 或 `$!` 是最后一个后台任务的 PID.
 
-`&>` 重定向:   
-`&>` 表示将 标准输出和标准错误 都重定向到同一个文件：  
+`&` 与 重定向符 `>`结合:  
 ```bash
-command > output.log 2>&1
+# 将 标准输出和标准错误 都重定向到 output.log 文件
+command >> output.log 2>&1
+
+# Bash 4.0+ 可以用简写：
+command &>> output.log
 ```
+
+在 Linux/Unix 中，每个进程都有三个默认的文件描述符:  
+描述符编号| 名称| 缩写 
+---|---|---
+0| 标准输入| stdin
+1| 标准输出| stdout
+2| 标准错误输出| stderr
+
+
