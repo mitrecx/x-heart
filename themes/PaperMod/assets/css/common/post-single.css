@@ -290,7 +290,7 @@
 }
 
 /* 页面放大或中等屏幕时隐藏TOC */
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1400px) {
     .toc-sidebar {
         display: none;
     }
@@ -303,6 +303,27 @@
     
     .post-content-container {
         gap: 0;
+    }
+}
+
+/* 超宽屏显示器优化 */
+@media screen and (min-width: 1600px) {
+    .post-content-container {
+        gap: 3rem;
+    }
+    
+    .toc-sidebar {
+        flex: 0 0 280px;
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .post-content-container {
+        gap: 4rem;
+    }
+    
+    .toc-sidebar {
+        flex: 0 0 300px;
     }
 }
 

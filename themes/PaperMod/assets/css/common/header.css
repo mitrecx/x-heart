@@ -8,6 +8,25 @@
     line-height: var(--header-height);
 }
 
+/* 超宽屏显示器导航栏优化 */
+@media screen and (min-width: 1600px) {
+    .nav {
+        max-width: calc(1300px + var(--gap) * 2);
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .nav {
+        max-width: calc(1500px + var(--gap) * 2);
+    }
+}
+
+@media screen and (min-width: 2560px) {
+    .nav {
+        max-width: calc(1700px + var(--gap) * 2);
+    }
+}
+
 .nav a {
     display: block;
 }

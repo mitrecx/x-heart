@@ -127,4 +127,85 @@ div.highlight {
 .highlight pre.chroma {
     background: transparent !important;
 }
+
+/* 宽屏显示器优化样式 */
+/* 超宽屏显示器上的内容宽度优化 */
+@media screen and (min-width: 1600px) {
+    .main {
+        max-width: calc(1300px + 48px) !important;
+    }
+    
+    .nav {
+        max-width: calc(1300px + 48px) !important;
+    }
+    
+    /* 文章内容区域优化 */
+    .post-content-container {
+        gap: 3rem !important;
+    }
+    
+    .toc-sidebar {
+        flex: 0 0 280px !important;
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .main {
+        max-width: calc(1500px + 48px) !important;
+    }
+    
+    .nav {
+        max-width: calc(1500px + 48px) !important;
+    }
+    
+    .post-content-container {
+        gap: 4rem !important;
+    }
+    
+    .toc-sidebar {
+        flex: 0 0 300px !important;
+    }
+}
+
+@media screen and (min-width: 2560px) {
+    .main {
+        max-width: calc(1700px + 48px) !important;
+    }
+    
+    .nav {
+        max-width: calc(1700px + 48px) !important;
+    }
+    
+    .post-content-container {
+        gap: 5rem !important;
+    }
+    
+    .toc-sidebar {
+        flex: 0 0 320px !important;
+    }
+}
+
+/* 确保在超宽屏上内容不会过于拉伸 */
+@media screen and (min-width: 1600px) {
+    .post-content {
+        max-width: 100% !important;
+        line-height: 1.8 !important;
+    }
+    
+    .post-content p {
+        max-width: 100% !important;
+    }
+}
+
+/* 优化宽屏上的图片显示 */
+@media screen and (min-width: 1600px) {
+    .post-content img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    .post-content figure {
+        max-width: 100% !important;
+    }
+}
 </style> 

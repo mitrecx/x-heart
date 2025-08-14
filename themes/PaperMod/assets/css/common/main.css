@@ -6,6 +6,25 @@
     padding: var(--gap);
 }
 
+/* 超宽屏显示器优化 */
+@media screen and (min-width: 1600px) {
+    .main {
+        max-width: calc(1300px + var(--gap) * 2);
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .main {
+        max-width: calc(1500px + var(--gap) * 2);
+    }
+}
+
+@media screen and (min-width: 2560px) {
+    .main {
+        max-width: calc(1700px + var(--gap) * 2);
+    }
+}
+
 .page-header h1 {
     font-size: 40px;
 }
