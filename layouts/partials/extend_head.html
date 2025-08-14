@@ -1,3 +1,143 @@
+<script>
+// 轻量级命令行着色增强：仅处理未被 Chroma 精细标注的行，也补充首词命令名高亮
+(function() {
+  function wrapFirstCommandWord(line) {
+    var PREFIX = /^(sudo|doas|time|command|nice|ionice|env)$/;
+    // 小工具：收集行内的所有纯文本节点
+    function collectTextNodes(root, out) {
+      out = out || [];
+      root.childNodes.forEach(function(n){
+        if (n.nodeType === 3) out.push(n);
+        else collectTextNodes(n, out);
+      });
+      return out;
+    }
+    // 小工具：根据整体偏移找到具体文本节点与内部偏移
+    function locateByOffset(root, offset) {
+      var nodes = collectTextNodes(root);
+      var acc = 0;
+      for (var i=0;i<nodes.length;i++) {
+        var t = nodes[i];
+        var len = t.nodeValue.length;
+        if (offset <= acc + len) {
+          return { node: t, inner: offset - acc };
+        }
+        acc += len;
+      }
+      return null;
+    }
+
+    // 先尝试：如果行首是命令或前缀，则高亮（兼容已有做法）
+    var node = line.firstChild;
+    var highlightedFirst = false;
+    var needNextCmd = false;
+    while (node) {
+      if (node.nodeType === 3) { // 文本节点
+        var txt = node.nodeValue;
+        var mSpace = txt.match(/^(\s*)/);
+        var leading = mSpace ? mSpace[0] : '';
+        var rest = txt.slice(leading.length);
+        if (rest.length === 0) { node = node.nextSibling; continue; }
+        var mWord = rest.match(/^([A-Za-z0-9._-]+)/);
+        if (mWord) {
+          var cmd = mWord[1];
+          var after = rest.slice(cmd.length);
+          var frag = document.createDocumentFragment();
+          if (leading) frag.appendChild(document.createTextNode(leading));
+          var span = document.createElement('span');
+          span.className = highlightedFirst ? 'tk-cmd' : (PREFIX.test(cmd) ? 'tk-prefix' : 'tk-cmd');
+          span.textContent = cmd;
+          frag.appendChild(span);
+          if (after) frag.appendChild(document.createTextNode(after));
+          var next = node.nextSibling;
+          line.replaceChild(frag, node);
+          highlightedFirst = true;
+          if (PREFIX.test(cmd) && !needNextCmd) { needNextCmd = true; node = line.firstChild; continue; }
+          if (needNextCmd) { break; }
+          node = next;
+          continue;
+        }
+      }
+      node = node.nextSibling;
+    }
+
+    // 补充：如果包含 `! cmd` 结构，则用 Range 包裹 cmd
+    try {
+      var raw = line.textContent;
+      var bang = raw.match(/!\s*([A-Za-z0-9._-]+)/);
+      if (bang) {
+        var word = bang[1];
+        var idxBang = raw.indexOf(bang[0]);
+        var idxWord = raw.indexOf(word, idxBang);
+        if (idxWord >= 0) {
+          var startLoc = locateByOffset(line, idxWord);
+          var endLoc = locateByOffset(line, idxWord + word.length);
+          if (startLoc && endLoc) {
+            var range = document.createRange();
+            range.setStart(startLoc.node, startLoc.inner);
+            range.setEnd(endLoc.node, endLoc.inner);
+            var wrap = document.createElement('span');
+            wrap.className = 'tk-cmd';
+            range.surroundContents(wrap);
+          }
+        }
+      }
+    } catch(e) { /* 忽略失败，保持原样 */ }
+  }
+
+  function enhanceShellBlocks() {
+    var blocks = document.querySelectorAll('code.language-bash, code.language-sh');
+    var PREFIX = /^(sudo|doas|time|command|nice|ionice|env)$/;
+    blocks.forEach(function(code) {
+      var lines = code.querySelectorAll('.line .cl');
+      lines.forEach(function(line) {
+        var raw = line.textContent;
+        if (!raw || !raw.trim()) return;
+        // 跳过注释行
+        if (raw.trim().startsWith('#')) return;
+        if (line.querySelector('span:not(.cl)')) {
+          // 已有部分token：为首个命令词（及sudo等前缀后的下一个命令）补充高亮
+          wrapFirstCommandWord(line);
+          return;
+        }
+        // 否则进行完整的切分高亮
+        var parts = raw.split(/(\s+)/);
+        var frag = document.createDocumentFragment();
+        var expectCmd = true; // 行首或管道/与/或 之后的第一个词视为命令名
+        parts.forEach(function(part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+          var span = document.createElement('span');
+          // 操作符
+          if (/^(\|\||\||&&|>>?|<<?)$/.test(part)) { span.className = 'tk-op'; expectCmd = true; }
+          // 前缀命令（sudo 等），同时让下一个词也按命令处理
+          else if (PREFIX.test(part)) { span.className = 'tk-prefix'; expectCmd = true; }
+          // 命令名（行首或操作符/前缀后）
+          else if (expectCmd) { span.className = 'tk-cmd'; expectCmd = false; }
+          // 选项（-t, --long）
+          else if (/^[-]{1,2}[A-Za-z0-9][A-Za-z0-9-]*$/.test(part)) { span.className = 'tk-opt'; }
+          // 路径
+          else if (/^\//.test(part)) { span.className = 'tk-path'; }
+          // IP:PORT
+          else if (/^\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?$/.test(part)) { span.className = 'tk-ip'; }
+          // 数字/纯数值
+          else if (/^\d+(?:\.\d+)?$/.test(part)) { span.className = 'tk-num'; }
+          span.textContent = part;
+          frag.appendChild(span);
+        });
+        line.textContent = '';
+        line.appendChild(frag);
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', enhanceShellBlocks);
+  } else {
+    enhanceShellBlocks();
+  }
+})();
+</script>
+
 <style>
 /* 重置并清理代码块样式 - 主题适配 */
 
@@ -20,24 +160,24 @@ div.highlight {
     --code-bg-custom: #f8f9fa;
     --code-text-custom: #24292e;
     --code-border-custom: #e1e4e8;
-    --code-comment: #6a737d;
-    --code-keyword: #d73a49;
-    --code-string: #032f62;
-    --code-function: #6f42c1;
-    --code-number: #005cc5;
-    --code-builtin: #e36209;
+    --code-comment: #6b7280; /* 更清晰的注释灰 */
+    --code-keyword: #ff79c6; /* 鲜艳粉 - 关键字 */
+    --code-string: #22c55e; /* 亮绿 - 字符串 */
+    --code-function: #0ea5e9; /* 青蓝 - 函数/方法 */
+    --code-number: #8b5cf6; /* 紫色 - 数字 */
+    --code-builtin: #f59e0b; /* 橙色 - 内建/命令 */
 }
 
 .dark {
     --code-bg-custom: #0d1117;
     --code-text-custom: #e6edf3;
     --code-border-custom: #30363d;
-    --code-comment: #7d8590;
-    --code-keyword: #ff7b72;
-    --code-string: #a5d6ff;
-    --code-function: #d2a8ff;
-    --code-number: #79c0ff;
-    --code-builtin: #ffa657;
+    --code-comment: #8b95a5; /* 暗色注释灰 */
+    --code-keyword: #ff79c6; /* 粉 */
+    --code-string: #50fa7b; /* 绿 */
+    --code-function: #8be9fd; /* 青 */
+    --code-number: #bd93f9; /* 紫 */
+    --code-builtin: #ffa657; /* 橙 */
 }
 
 /* 仅为最外层的highlight div设置样式 */
@@ -208,4 +348,183 @@ div.highlight {
         max-width: 100% !important;
     }
 }
-</style> 
+
+/* 语法增强：让通用名称在多数语言（含bash）中更有颜色 */
+.chroma .n,
+.chroma .nx {
+    color: #1f6feb !important; /* 蓝色：命名/标识符 */
+}
+
+.chroma .nb {
+    color: #2da44e !important; /* 绿色：内建/常用命令 */
+}
+
+.chroma .o,
+.chroma .ow {
+    color: #d29922 !important; /* 操作符/关键字操作词：琥珀色 */
+    font-weight: 600 !important;
+}
+
+/* 让数字更明显 */
+.chroma .m,
+.chroma .mi,
+.chroma .mo,
+.chroma .mf,
+.chroma .il {
+    color: #bc8cff !important; /* 淡紫色：数字 */
+}
+
+/* 将代码块角标改为显示语言（从 code 的 data-lang 读取） */
+.post-content pre {
+    position: relative !important;
+}
+
+.post-content pre > code::before {
+    content: attr(data-lang) !important;
+    position: absolute !important;
+    top: -10px !important;
+    right: 12px !important;
+    background: #0366d6 !important;
+    color: #fff !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+.dark .post-content pre > code::before {
+    background: #58a6ff !important;
+    color: #0d1117 !important;
+}
+
+/* 覆盖之前的“代码块”角标（如果存在） */
+.post-content pre::before { content: none !important; }
+
+/* 更鲜艳的语法高亮覆盖 */
+.chroma .k, .chroma .kc, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt {
+    color: var(--code-keyword) !important;
+    font-weight: 700 !important;
+}
+
+.chroma .s, .chroma .s1, .chroma .s2, .chroma .sb, .chroma .sc,
+.chroma .sd, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx, .chroma .sr, .chroma .ss {
+    color: var(--code-string) !important;
+}
+
+.chroma .nf, .chroma .fm, .chroma .na {
+    color: var(--code-function) !important;
+}
+
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo {
+    color: var(--code-number) !important;
+}
+
+.chroma .nb, .chroma .bp, .chroma .nt, .chroma .nn, .chroma .no,
+.chroma .nd, .chroma .ne, .chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm, .chroma .py {
+    color: var(--code-builtin) !important;
+}
+
+/* 操作符/标点稍作强调，辅以粉系 */
+.chroma .o, .chroma .ow, .chroma .p {
+    color: #f472b6 !important;
+}
+
+/* 注释稍加强对比 */
+.chroma .c, .chroma .ch, .chroma .cm, .chroma .c1, .chroma .cs, .chroma .cp, .chroma .cpf {
+    color: var(--code-comment) !important;
+    font-style: italic !important;
+}
+
+/* 隐藏代码块语言角标 */
+.post-content pre > code::before {
+    content: none !important;
+    display: none !important;
+}
+
+/* 进一步增强纯命令（bash/shell）的配色 */
+/* 变量（$var、位置参数等）——亮黄 */
+.chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm {
+    color: #eab308 !important;
+    font-weight: 700 !important;
+}
+
+/* 选项/属性名（很多 lexer 会把 --long-option/-o 识别到 .na/.nd）——淡紫 */
+.chroma .na, .chroma .nd {
+    color: #a78bfa !important;
+}
+
+/* 内置命令/关键命令（echo, cd 等）——橙色已设，提升权重 */
+.chroma .nb, .chroma .bp {
+    color: var(--code-builtin) !important;
+    font-weight: 700 !important;
+}
+
+/* 可能被归到普通名称（外部命令如 du/sort/head/find）——亮蓝 */
+.chroma .n, .chroma .nx, .chroma .nn, .chroma .nt {
+    color: #1f6feb !important;
+}
+
+/* 管道/重定向/操作符——玫红并加粗 */
+.chroma .o, .chroma .ow, .chroma .p {
+    color: #f472b6 !important;
+    font-weight: 700 !important;
+}
+</style><script>
+// 轻量级命令行着色增强：仅处理未被 Chroma 精细标注的行
+(function() {
+  function enhanceShellBlocks() {
+    var blocks = document.querySelectorAll('code.language-bash, code.language-sh');
+    blocks.forEach(function(code) {
+      var lines = code.querySelectorAll('.line .cl');
+      lines.forEach(function(line) {
+        var raw = line.textContent;
+        if (!raw || !raw.trim()) return;
+        // 跳过注释行与已包含 token 的行
+        if (raw.trim().startsWith('#')) return;
+        if (line.querySelector('span:not(.cl)')) return;
+        var parts = raw.split(/(\s+)/);
+        var frag = document.createDocumentFragment();
+        var expectCmd = true; // 行首或管道/与/或 之后的第一个词视为命令名
+        parts.forEach(function(part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+          var span = document.createElement('span');
+          // 操作符
+          if (/^(\|\||\||&&|>>?|<<?)$/.test(part)) { span.className = 'tk-op'; expectCmd = true; }
+          // 命令名（行首或操作符后）
+          else if (expectCmd) { span.className = 'tk-cmd'; expectCmd = false; }
+          // 选项（-t, --long）
+          else if (/^[-]{1,2}[A-Za-z0-9][A-Za-z0-9-]*$/.test(part)) { span.className = 'tk-opt'; }
+          // 路径
+          else if (/^\//.test(part)) { span.className = 'tk-path'; }
+          // IP:PORT
+          else if (/^\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?$/.test(part)) { span.className = 'tk-ip'; }
+          // 数字/纯数值
+          else if (/^\d+(?:\.\d+)?$/.test(part)) { span.className = 'tk-num'; }
+          span.textContent = part;
+          frag.appendChild(span);
+        });
+        line.textContent = '';
+        line.appendChild(frag);
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', enhanceShellBlocks);
+  } else {
+    enhanceShellBlocks();
+  }
+})();
+</script>
+
+<style>
+/* 轻量级命令行着色增强 - 颜色定义 */
+.tk-cmd { color: #1f6feb !important; font-weight: 700 !important; }
+.tk-prefix { color: #0ea5e9 !important; font-weight: 700 !important; }
+.tk-opt { color: #a78bfa !important; }
+.tk-path { color: #10b981 !important; }
+.tk-op { color: #f43f5e !important; font-weight: 700 !important; }
+.tk-num, .tk-ip { color: #8b5cf6 !important; }
+</style>
+
