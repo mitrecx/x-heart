@@ -470,53 +470,7 @@ div.highlight {
     color: #f472b6 !important;
     font-weight: 700 !important;
 }
-</style><script>
-// 轻量级命令行着色增强：仅处理未被 Chroma 精细标注的行
-(function() {
-  function enhanceShellBlocks() {
-    var blocks = document.querySelectorAll('code.language-bash, code.language-sh');
-    blocks.forEach(function(code) {
-      var lines = code.querySelectorAll('.line .cl');
-      lines.forEach(function(line) {
-        var raw = line.textContent;
-        if (!raw || !raw.trim()) return;
-        // 跳过注释行与已包含 token 的行
-        if (raw.trim().startsWith('#')) return;
-        if (line.querySelector('span:not(.cl)')) return;
-        var parts = raw.split(/(\s+)/);
-        var frag = document.createDocumentFragment();
-        var expectCmd = true; // 行首或管道/与/或 之后的第一个词视为命令名
-        parts.forEach(function(part) {
-          if (!part) return;
-          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
-          var span = document.createElement('span');
-          // 操作符
-          if (/^(\|\||\||&&|>>?|<<?)$/.test(part)) { span.className = 'tk-op'; expectCmd = true; }
-          // 命令名（行首或操作符后）
-          else if (expectCmd) { span.className = 'tk-cmd'; expectCmd = false; }
-          // 选项（-t, --long）
-          else if (/^[-]{1,2}[A-Za-z0-9][A-Za-z0-9-]*$/.test(part)) { span.className = 'tk-opt'; }
-          // 路径
-          else if (/^\//.test(part)) { span.className = 'tk-path'; }
-          // IP:PORT
-          else if (/^\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?$/.test(part)) { span.className = 'tk-ip'; }
-          // 数字/纯数值
-          else if (/^\d+(?:\.\d+)?$/.test(part)) { span.className = 'tk-num'; }
-          span.textContent = part;
-          frag.appendChild(span);
-        });
-        line.textContent = '';
-        line.appendChild(frag);
-      });
-    });
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', enhanceShellBlocks);
-  } else {
-    enhanceShellBlocks();
-  }
-})();
-</script>
+</style>
 
 <style>
 /* 轻量级命令行着色增强 - 颜色定义 */
@@ -526,5 +480,13 @@ div.highlight {
 .tk-path { color: #10b981 !important; }
 .tk-op { color: #f43f5e !important; font-weight: 700 !important; }
 .tk-num, .tk-ip { color: #8b5cf6 !important; }
+</style>
+
+<style>
+/* 紧凑代码块左右内边距（略微左移） */
+.post-content div.highlight { padding: 12px 14px 12px 10px !important; }
+/* 确保pre本身无额外左侧空隙 */
+.post-content div.highlight pre,
+.post-content div.highlight pre code { margin-left: 0 !important; }
 </style>
 
