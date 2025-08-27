@@ -661,6 +661,66 @@ echo $v_name  # 输出 abby
 - 环境变量 不仅在当前 Shell 可用，还会 **传递给该 Shell 启动的子进程**。    
 - 普通变量 没有 export，**只在当前 Shell 可用**，子进程无法访问。
 
+## here-doc
+Heredoc (Here Document) 是一种用于向命令传递多行输入的方式，常用于 Shell 脚本 或 命令行 中，能够简化多行字符串的输入或数据传递。   
+基本语法:   
+```bash
+command << delimiter
+content
+delimiter
+```
+`command`: 接收标准输入的命令   
+delimiter: **自定义结束标识符，常用 EOF、END** 等   
+content: 作为输入传递给命令的多行内容  
+**结束标识符必须单独一行，且前后无空格**   
+
+### 常见用法
+多行输入到 cat 命令:  
+```bash
+cat << EOF
+Hello, World!
+This is a test.
+EOF
+```
+输出:  
+```text
+Hello, World!
+This is a test.
+```
+
+写入文件:  
+```bash
+# 结合重定向 > 或 >> 将内容写入文件：
+cat << EOF > test.txt
+Line 1: Hello
+Line 2: World
+EOF
+```
+
+变量替换:  
+```bash
+# 默认情况下，Heredoc 会解析变量
+name="Linux"
+
+cat << EOF
+Welcome to $name tutorial.
+EOF
+```
+结果:  
+```text
+Welcome to Linux tutorial.
+```
+
+如果 不想解析变量，可以用 单引号包围定界符:  
+```bash
+cat << 'EOF'
+Welcome to $name tutorial.
+EOF
+```
+结果:  
+```bash
+Welcome to $name tutorial.
+```
 
 ## 其他
 
