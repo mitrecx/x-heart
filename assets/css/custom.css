@@ -99,3 +99,99 @@ html body .post-content *::-webkit-scrollbar {
     width: 0 !important;
     height: 0 !important;
 }
+
+/* 优化列表和段落间距 */
+.post-content p {
+    margin-bottom: 0.5em !important;
+}
+
+.post-content ol,
+.post-content ul {
+    margin-top: 0.3em !important;
+    margin-bottom: 0.5em !important;
+}
+
+.post-content li {
+    margin-top: 2px !important;
+    margin-bottom: 2px !important;
+}
+
+/* 确保列表和上方文本之间没有多余空行 */
+.post-content p + ol,
+.post-content p + ul {
+    margin-top: 0.2em !important;
+}
+
+/* 优化图片和文本之间的间距 */
+.post-content img {
+    margin: 0.5rem 0 0.1rem 0 !important; /* 进一步减少底部间距 */
+}
+
+.post-content img + p,
+.post-content img + div,
+.post-content img + h1,
+.post-content img + h2,
+.post-content img + h3,
+.post-content img + h4,
+.post-content img + h5,
+.post-content img + h6,
+.post-content img + ul,
+.post-content img + ol,
+.post-content img + blockquote,
+.post-content img + pre {
+    margin-top: 0.15em !important; /* 图片后面的元素顶部间距进一步缩小 */
+}
+
+/* 处理figure标签中的图片 */
+.post-content figure {
+    margin: 0.5rem 0 0.1rem 0 !important;
+}
+
+.post-content figure + p,
+.post-content figure + div,
+.post-content figure + h1,
+.post-content figure + h2,
+.post-content figure + h3,
+.post-content figure + h4,
+.post-content figure + h5,
+.post-content figure + h6,
+.post-content figure + ul,
+.post-content figure + ol,
+.post-content figure + blockquote,
+.post-content figure + pre {
+    margin-top: 0.15em !important;
+}
+
+/* 确保图片说明文字和下方内容间距合适 */
+.post-content figcaption {
+    margin-bottom: 0.1em !important;
+}
+
+/* 处理所有可能的图片容器和相邻元素 */
+.post-content .highlight + img,
+.post-content pre + img,
+.post-content blockquote + img,
+.post-content table + img,
+.post-content .highlight + figure,
+.post-content pre + figure,
+.post-content blockquote + figure,
+.post-content table + figure {
+    margin-top: 0.5rem !important;
+}
+
+/* 确保图片在代码块后面时也有合适的间距 */
+.post-content img + .highlight,
+.post-content figure + .highlight,
+.post-content img + pre,
+.post-content figure + pre {
+    margin-top: 0.3em !important;
+}
+
+/* 处理图片在列表中的情况 */
+.post-content li img {
+    margin: 0.3rem 0 0.1rem 0 !important;
+}
+
+.post-content li figure {
+    margin: 0.3rem 0 0.1rem 0 !important;
+}

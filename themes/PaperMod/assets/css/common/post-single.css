@@ -88,20 +88,30 @@
 }
 
 .post-content dl,
-.post-content ol,
-.post-content p,
-.post-content figure,
-.post-content ul {
+.post-content figure {
     margin-bottom: var(--content-gap);
+}
+
+/* 移除段落和列表之间的多余间距 */
+.post-content p {
+    margin-bottom: 0.5em;
+}
+
+.post-content ol,
+.post-content ul {
+    margin-bottom: 0.5em;
 }
 
 .post-content ol,
 .post-content ul {
     padding-inline-start: 20px;
+    margin-top: 0.3em;
+    margin-bottom: 0.5em;
 }
 
 .post-content li {
-    margin-top: 5px;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 .post-content li p {
@@ -239,7 +249,7 @@
 
 .post-content img {
     border-radius: 4px;
-    margin: 1rem 0;
+    margin: 0.5rem 0 0.1rem 0; /* 进一步减少底部间距，几乎消除空行 */
 }
 
 .post-content img[src*="#center"] {
