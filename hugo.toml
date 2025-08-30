@@ -108,7 +108,7 @@ pygmentsUseClasses = true
       autoHeadingID = true
       autoHeadingIDType = "github"
     [markup.goldmark.renderer]
-      hardWraps = false
+      hardWraps = true
       unsafe = true
       xhtml = false
 
