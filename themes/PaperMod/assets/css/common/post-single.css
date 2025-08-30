@@ -208,6 +208,16 @@
     border-radius: var(--radius);
     overflow-x: auto;
     word-break: break-all;
+    /* 隐藏滚动条 */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* 隐藏Webkit浏览器的滚动条 */
+.post-content pre code::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
 }
 
 .post-content blockquote {

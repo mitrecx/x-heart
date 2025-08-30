@@ -2,3 +2,40 @@
 {{- /*     Insert any custom code (web-analytics, resources, etc.) - it will appear in the <head></head> section of every page. */ -}}
 {{- /*     Can be overwritten by partial with the same name in the global layouts. */ -}}
 {{- /* Head custom content area end */ -}}
+
+<!-- 引入自定义CSS -->
+<link rel="stylesheet" href="{{ "css/custom.css" | relURL }}">
+
+<!-- 引入自定义JavaScript -->
+<script src="{{ "js/hide-scrollbars.js" | relURL }}"></script>
+
+<!-- 内联CSS强制隐藏滚动条 -->
+<style>
+/* 强制隐藏所有代码块的滚动条 */
+.post-content pre::-webkit-scrollbar,
+.post-content pre code::-webkit-scrollbar,
+.post-content .highlight::-webkit-scrollbar,
+.post-content .highlight pre::-webkit-scrollbar,
+.post-content .highlight pre code::-webkit-scrollbar,
+.post-content .highlighttable::-webkit-scrollbar,
+.post-content .highlighttable td::-webkit-scrollbar,
+.post-content .highlighttable td .highlight::-webkit-scrollbar,
+.post-content .highlighttable td .highlight pre::-webkit-scrollbar,
+.post-content .highlighttable td .highlight pre code::-webkit-scrollbar,
+.post-content *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.post-content pre,
+.post-content .highlight,
+.post-content .highlighttable,
+.post-content .highlighttable td,
+.post-content .highlighttable td .highlight,
+.post-content .highlighttable td .highlight pre,
+.post-content * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+</style>
