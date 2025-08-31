@@ -9,7 +9,7 @@
 <!-- 引入自定义JavaScript -->
 <script src="{{ "js/hide-scrollbars.js" | relURL }}"></script>
 
-<!-- 内联CSS强制隐藏滚动条 -->
+<!-- 内联CSS强制隐藏滚动条和调整列表间距 -->
 <style>
 /* 强制隐藏所有代码块的滚动条 */
 .post-content pre::-webkit-scrollbar,
@@ -37,5 +37,25 @@
 .post-content * {
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
+}
+
+/* 大幅增加列表项间距 */
+.post-content ol,
+.post-content ul {
+    margin-top: 1.5em !important;
+    margin-bottom: 2em !important;
+}
+
+.post-content li {
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
+    line-height: 2.2 !important;
+    padding: 12px 0 !important;
+}
+
+/* 确保列表和上方文本之间有适当间距 */
+.post-content p + ol,
+.post-content p + ul {
+    margin-top: 1em !important;
 }
 </style>
