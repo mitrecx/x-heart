@@ -48,6 +48,10 @@ pygmentsUseClasses = true
   # 图片设置
   images = ["images/papermod-cover.png"]
   
+  # 隐藏文章详情页的封面图片
+  [params.cover]
+    hiddenInSingle = true
+  
   # 首页信息
   # [params.homeInfoParams]
   #   Title = "欢迎来到我的博客"

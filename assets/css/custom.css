@@ -195,3 +195,12 @@ html body .post-content *::-webkit-scrollbar {
 .post-content li figure {
     margin: 0.3rem 0 0.1rem 0 !important;
 }
+
+/* 隐藏文章详情页的封面图片 */
+.post-single .post-header .cover {
+    display: none !important;
+}
+
+.post-single .post-header .post-cover {
+    display: none !important;
+}
