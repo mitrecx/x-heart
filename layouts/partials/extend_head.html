@@ -532,3 +532,163 @@ div.highlight {
 }
 </style>
 
+<!-- 目录自动聚焦脚本 -->
+<script>
+(function() {
+    function initTocAutoFocus() {
+        // 获取所有标题元素
+        const headings = document.querySelectorAll('.post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6');
+        const tocLinks = document.querySelectorAll('.toc a');
+        
+        if (headings.length === 0 || tocLinks.length === 0) return;
+        
+        // 清除所有高亮
+        function clearHighlights() {
+            tocLinks.forEach(link => {
+                link.style.backgroundColor = '';
+                link.style.color = '';
+                link.style.padding = '';
+                link.style.borderRadius = '';
+            });
+        }
+        
+        // 高亮指定索引的链接
+        function highlightLink(index) {
+            clearHighlights();
+            if (tocLinks[index]) {
+                tocLinks[index].style.backgroundColor = '#0366d6';
+                tocLinks[index].style.color = 'white';
+                tocLinks[index].style.padding = '2px 6px';
+                tocLinks[index].style.borderRadius = '4px';
+                
+                // 自动滚动目录以显示高亮的链接
+                scrollToTocLink(tocLinks[index]);
+            }
+        }
+        
+        // 目录自动滚动到指定链接
+        function scrollToTocLink(link) {
+            // 查找可滚动的容器
+            const possibleContainers = [
+                link.closest('.toc'),
+                link.closest('.toc-sidebar'),
+                link.closest('.inner'),
+                link.closest('aside'),
+                link.parentElement
+            ];
+            
+            let tocContainer = null;
+            for (const container of possibleContainers) {
+                if (container && container.scrollHeight > container.clientHeight) {
+                    const style = window.getComputedStyle(container);
+                    if (style.overflow === 'auto' || style.overflow === 'scroll' || 
+                        style.overflowY === 'auto' || style.overflowY === 'scroll') {
+                        tocContainer = container;
+                        break;
+                    }
+                }
+            }
+            
+            if (!tocContainer) return;
+            
+            const linkRect = link.getBoundingClientRect();
+            const containerRect = tocContainer.getBoundingClientRect();
+            
+            // 计算链接在容器中的相对位置
+            const linkTop = linkRect.top - containerRect.top + tocContainer.scrollTop;
+            const linkBottom = linkTop + linkRect.height;
+            const containerHeight = containerRect.height;
+            
+            // 计算目标滚动位置
+            let targetScrollTop = tocContainer.scrollTop;
+            
+            if (linkTop < tocContainer.scrollTop + 20) {
+                // 链接在可视区域顶部上方，向上滚动
+                targetScrollTop = Math.max(0, linkTop - 20);
+            } else if (linkBottom > tocContainer.scrollTop + containerHeight - 20) {
+                // 链接在可视区域底部下方，向下滚动
+                targetScrollTop = Math.min(tocContainer.scrollHeight - containerHeight, linkBottom - containerHeight + 20);
+            }
+            
+            // 执行滚动
+            if (Math.abs(targetScrollTop - tocContainer.scrollTop) > 5) {
+                tocContainer.scrollTop = targetScrollTop;
+            }
+        }
+        
+        // 滚动检测函数
+        function checkScroll() {
+            const scrollPosition = window.scrollY + 100;
+            
+            // 找到当前最接近的标题
+            let currentIndex = -1;
+            let closestDistance = Infinity;
+            
+            headings.forEach((heading, index) => {
+                const headingTop = heading.offsetTop;
+                const distance = Math.abs(scrollPosition - headingTop);
+                
+                if (distance < closestDistance && scrollPosition >= headingTop) {
+                    closestDistance = distance;
+                    currentIndex = index;
+                }
+            });
+            
+            // 如果没有找到，高亮第一个
+            if (currentIndex === -1 && headings.length > 0) {
+                currentIndex = 0;
+            }
+            
+            if (currentIndex >= 0) {
+                highlightLink(currentIndex);
+            }
+        }
+        
+        // 节流函数
+        function throttle(func, limit) {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            }
+        }
+        
+        // 监听滚动事件
+        window.addEventListener('scroll', throttle(checkScroll, 150));
+        
+        // 初始化时检查一次
+        checkScroll();
+        
+        // 处理点击事件
+        tocLinks.forEach((link, index) => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    }
+    
+    // 等待DOM完全加载
+    if (document.readyState === 'complete') {
+        setTimeout(initTocAutoFocus, 500);
+    } else {
+        window.addEventListener('load', () => {
+            setTimeout(initTocAutoFocus, 500);
+        });
+    }
+})();
+</script>
+
