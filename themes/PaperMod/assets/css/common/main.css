@@ -9,19 +9,19 @@
 /* 超宽屏显示器优化 */
 @media screen and (min-width: 1600px) {
     .main {
-        max-width: calc(1300px + var(--gap) * 2);
+        max-width: calc(1450px + var(--gap) * 2);
     }
 }
 
 @media screen and (min-width: 1920px) {
     .main {
-        max-width: calc(1500px + var(--gap) * 2);
+        max-width: calc(1650px + var(--gap) * 2);
     }
 }
 
 @media screen and (min-width: 2560px) {
     .main {
-        max-width: calc(1700px + var(--gap) * 2);
+        max-width: calc(1850px + var(--gap) * 2);
     }
 }
 
