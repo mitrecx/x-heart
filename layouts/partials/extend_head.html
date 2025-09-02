@@ -530,6 +530,80 @@ div.highlight {
     margin: 0.2em 0 1.6em 0 !important;
     border-spacing: 25px 8px !important;
 }
+
+/* 首页封面图片响应式显示 */
+@media screen and (max-width: 768px) {
+    /* 小屏幕显示封面图片 */
+    .entry-cover {
+        display: block !important;
+    }
+    
+    .entry-cover img {
+        max-width: 100% !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    /* 中等屏幕显示封面图片但尺寸适中 */
+    .entry-cover {
+        display: block !important;
+    }
+    
+    .entry-cover img {
+        max-width: 98% !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    /* 大屏幕隐藏封面图片 */
+    .entry-cover {
+        display: none !important;
+    }
+    
+    /* 大屏幕放大文字内容以补偿空间 */
+    .entry-header h2 {
+        font-size: 28px !important;
+        line-height: 1.4 !important;
+    }
+    
+    .entry-content {
+        font-size: 16px !important;
+        line-height: 1.7 !important;
+        margin: 12px 0 !important;
+    }
+    
+    .entry-footer {
+        font-size: 14px !important;
+    }
+    
+    /* 增加文章条目间距以提升可读性 */
+    .post-entry {
+        margin-bottom: 2rem !important;
+        padding: 1.5rem !important;
+    }
+}
+
+/* 超大屏幕进一步优化 */
+@media screen and (min-width: 1600px) {
+    .entry-header h2 {
+        font-size: 30px !important;
+    }
+    
+    .entry-content {
+        font-size: 17px !important;
+    }
+    
+    .post-entry {
+        margin-bottom: 2.5rem !important;
+        padding: 2rem !important;
+    }
+}
 </style>
 
 <!-- 目录自动聚焦脚本 -->
