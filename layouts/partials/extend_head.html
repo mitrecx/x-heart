@@ -251,7 +251,7 @@ div.highlight {
 
 /* 复制按钮样式 */
 .copy-code {
-    background: rgba(0, 0, 0, 0.7) !important;
+    background: rgba(0, 0, 0, 0.5) !important;
     color: white !important;
     font-size: 12px !important;
     padding: 4px 8px !important;
@@ -529,6 +529,143 @@ div.highlight {
 .post-content table {
     margin: 0.2em 0 1.6em 0 !important;
     border-spacing: 25px 8px !important;
+}
+
+/* 首页背景图片设置 */
+body.home,
+body.list:not(.terms):not(.archives) {
+    background-image: url('/images/background/homepage/light_mode.jpeg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+    min-height: 100vh !important;
+}
+
+/* 半透明背景与背景图片一样大 */
+body.home::before,
+body.list:not(.terms):not(.archives)::before {
+    content: '' !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(208, 208, 208, 0.881) !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+}
+
+/* 深色模式下的半透明背景 */
+body.dark.home::before,
+body.dark.list:not(.terms):not(.archives)::before {
+    background-color: rgba(0, 0, 0, 0.741) !important;
+}
+
+/* 确保内容在黑色半透明背景之上 */
+.main, .footer {
+    position: relative !important;
+    z-index: 1 !important;
+    background-color: transparent !important;
+}
+
+/* 导航栏固定在顶端 */
+.header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 1000 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* 深色模式导航栏 */
+body.dark .header {
+    background-color: rgba(30, 30, 30, 0.9) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 为固定导航栏留出空间 */
+.main {
+    margin-top: 120px !important;
+}
+
+/* 为整个首页添加全屏半透明背景 */
+body.home .main {
+    min-height: 100vh !important;
+    background-color: transparent !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 40px 20px !important;
+    box-sizing: border-box !important;
+}
+
+body.home.dark .main {
+    background-color: transparent !important;
+}
+
+/* 深色模式背景图片 */
+body.home.dark,
+body.list:not(.terms):not(.archives).dark {
+    background-image: url('/images/background/homepage/dark_mode.jpeg') !important;
+}
+
+/* 确保内容在背景之上 */
+.main,
+.page-header,
+.post-entry,
+.footer,
+.nav {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* 为整个页面内容区域添加半透明背景以确保可读性 */
+.main {
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    padding: 40px 20px !important;
+    box-sizing: border-box !important;
+}
+
+body.dark .main {
+    background-color: transparent !important;
+}
+
+/* 确保首页文章列表区域也有半透明背景 */
+.list .main {
+    background-color: transparent !important;
+    padding: 40px 20px !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+body.dark .list .main {
+    background-color: transparent !important;
+}
+
+/* 为文章条目添加背景 */
+.post-entry {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(0px) !important;
+}
+
+body.dark .post-entry {
+    background-color: rgba(40, 40, 40, 0.2) !important;
 }
 
 /* 首页封面图片响应式显示 */
