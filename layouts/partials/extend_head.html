@@ -1,5 +1,12 @@
+<!-- Hugo网站自定义样式和脚本 -->
+<!-- 文件位置: layouts/partials/extend_head.html -->
+<!-- 作用: 扩展PaperMod主题的默认样式，添加自定义功能 -->
+
 <script>
-// 轻量级命令行着色增强：仅处理未被 Chroma 精细标注的行，也补充首词命令名高亮
+// ========== 命令行代码块语法高亮增强 ==========
+// 功能: 为shell代码块添加智能语法高亮，支持命令、选项、路径等元素的着色
+// 注意: 仅对未被Chroma精细标注的代码行生效，避免覆盖已有的语法高亮
+// 注意: 调试CSS时先检查HTML结构; 不要假设，要验证实际的DOM结构;
 (function() {
   function wrapFirstCommandWord(line) {
     var PREFIX = /^(sudo|doas|time|command|nice|ionice|env)$/;
@@ -139,9 +146,34 @@
 </script>
 
 <style>
-/* 重置并清理代码块样式 - 主题适配 */
+/* ========== CSS变量定义 ========== */
+/* 作用: 定义全局颜色变量，便于主题切换和统一管理 */
+:root {
+    --code-bg-custom: #f8f9fa;
+    --code-text-custom: #24292e;
+    --code-border-custom: #e1e4e8;
+    --code-comment: #6b7280;
+    --code-keyword: #ff79c6;
+    --code-string: #22c55e;
+    --code-function: #0ea5e9;
+    --code-number: #8b5cf6;
+    --code-builtin: #f59e0b;
+}
 
-/* 彻底重置所有代码块相关的背景和边框 */
+.dark {
+    --code-bg-custom: #0d1117;
+    --code-text-custom: #e6edf3;
+    --code-border-custom: #30363d;
+    --code-comment: #8b95a5;
+    --code-keyword: #ff79c6;
+    --code-string: #50fa7b;
+    --code-function: #8be9fd;
+    --code-number: #bd93f9;
+    --code-builtin: #ffa657;
+}
+
+/* ========== 代码块样式 ========== */
+/* 重置所有代码块相关的背景和边框，避免主题默认样式的干扰 */
 .post-content .highlight:not(table),
 .post-content .highlight,
 .post-content pre,
@@ -155,32 +187,7 @@ div.highlight {
     border-radius: 0 !important;
 }
 
-/* 定义主题变量 */
-:root {
-    --code-bg-custom: #f8f9fa;
-    --code-text-custom: #24292e;
-    --code-border-custom: #e1e4e8;
-    --code-comment: #6b7280; /* 更清晰的注释灰 */
-    --code-keyword: #ff79c6; /* 鲜艳粉 - 关键字 */
-    --code-string: #22c55e; /* 亮绿 - 字符串 */
-    --code-function: #0ea5e9; /* 青蓝 - 函数/方法 */
-    --code-number: #8b5cf6; /* 紫色 - 数字 */
-    --code-builtin: #f59e0b; /* 橙色 - 内建/命令 */
-}
-
-.dark {
-    --code-bg-custom: #0d1117;
-    --code-text-custom: #e6edf3;
-    --code-border-custom: #30363d;
-    --code-comment: #8b95a5; /* 暗色注释灰 */
-    --code-keyword: #ff79c6; /* 粉 */
-    --code-string: #50fa7b; /* 绿 */
-    --code-function: #8be9fd; /* 青 */
-    --code-number: #bd93f9; /* 紫 */
-    --code-builtin: #ffa657; /* 橙 */
-}
-
-/* 仅为最外层的highlight div设置样式 */
+/* 代码块容器样式 */
 .post-content div.highlight {
     background: var(--code-bg-custom) !important;
     color: var(--code-text-custom) !important;
@@ -192,7 +199,6 @@ div.highlight {
     position: relative !important;
 }
 
-/* 确保内部pre和code无额外样式 */
 .post-content div.highlight pre,
 .post-content div.highlight pre code {
     background: transparent !important;
@@ -216,690 +222,458 @@ div.highlight {
 }
 
 /* 语法高亮颜色 */
-.chroma .c, .chroma .c1, .chroma .cm, .chroma .cs {
-    color: var(--code-comment) !important;
-    font-style: italic !important;
-}
-
-.chroma .k, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt {
-    color: var(--code-keyword) !important;
-    font-weight: bold !important;
-}
-
-.chroma .s, .chroma .s1, .chroma .s2, .chroma .sb, .chroma .sc, 
-.chroma .sd, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx {
-    color: var(--code-string) !important;
-}
-
-.chroma .nf, .chroma .fm {
-    color: var(--code-function) !important;
-    font-weight: bold !important;
-}
-
-.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .mo {
-    color: var(--code-number) !important;
-}
-
-.chroma .nb, .chroma .bp {
-    color: var(--code-builtin) !important;
-}
-
-/* 确保所有其他chroma元素继承正确的颜色 */
-.chroma * {
-    background: transparent !important;
-}
+.chroma .c, .chroma .c1, .chroma .cm, .chroma .cs { color: var(--code-comment) !important; font-style: italic !important; }
+.chroma .k, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt { color: var(--code-keyword) !important; font-weight: bold !important; }
+.chroma .s, .chroma .s1, .chroma .s2, .chroma .sb, .chroma .sc, .chroma .sd, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx { color: var(--code-string) !important; }
+.chroma .nf, .chroma .fm { color: var(--code-function) !important; font-weight: bold !important; }
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .mo { color: var(--code-number) !important; }
+.chroma .nb, .chroma .bp { color: var(--code-builtin) !important; }
+.chroma * { background: transparent !important; }
 
 /* 复制按钮样式 */
-.copy-code {
-    background: rgba(0, 0, 0, 0.5) !important;
-    color: white !important;
-    font-size: 12px !important;
-    padding: 4px 8px !important;
-    border-radius: 4px !important;
-}
+.copy-code { background: rgba(0, 0, 0, 0.5) !important; color: white !important; font-size: 12px !important; padding: 4px 8px !important; border-radius: 4px !important; }
+.dark .copy-code { background: rgba(255, 255, 255, 0.8) !important; color: black !important; }
 
-.dark .copy-code {
-    background: rgba(255, 255, 255, 0.8) !important;
-    color: black !important;
-}
-
-/* 确保没有其他元素干扰 */
-.highlight pre.chroma {
-    background: transparent !important;
-}
-
-/* 宽屏显示器优化样式 */
-/* 超宽屏显示器上的内容宽度优化 */
-@media screen and (min-width: 1600px) {
-    .main {
-        max-width: calc(1300px + 48px) !important;
-    }
-    
-    .nav {
-        max-width: calc(1300px + 48px) !important;
-    }
-    
-    /* 文章内容区域优化 */
-    .post-content-container {
-        gap: 3rem !important;
-    }
-    
-    .toc-sidebar {
-        flex: 0 0 280px !important;
-    }
-}
-
-@media screen and (min-width: 1920px) {
-    .main {
-        max-width: calc(1500px + 48px) !important;
-    }
-    
-    .nav {
-        max-width: calc(1500px + 48px) !important;
-    }
-    
-    .post-content-container {
-        gap: 4rem !important;
-    }
-    
-    .toc-sidebar {
-        flex: 0 0 300px !important;
-    }
-}
-
-@media screen and (min-width: 2560px) {
-    .main {
-        max-width: calc(1700px + 48px) !important;
-    }
-    
-    .nav {
-        max-width: calc(1700px + 48px) !important;
-    }
-    
-    .post-content-container {
-        gap: 5rem !important;
-    }
-    
-    .toc-sidebar {
-        flex: 0 0 320px !important;
-    }
-}
-
-/* 确保在超宽屏上内容不会过于拉伸 */
-@media screen and (min-width: 1600px) {
-    .post-content {
-        max-width: 100% !important;
-        line-height: 1.8 !important;
-    }
-    
-    .post-content p {
-        max-width: 100% !important;
-    }
-}
-
-/* 优化宽屏上的图片显示 */
-@media screen and (min-width: 1600px) {
-    .post-content img {
-        max-width: 100% !important;
-        height: auto !important;
-    }
-    
-    .post-content figure {
-        max-width: 100% !important;
-    }
-}
-
-/* 语法增强：让通用名称在多数语言（含bash）中更有颜色 */
-.chroma .n,
-.chroma .nx {
-    color: #1f6feb !important; /* 蓝色：命名/标识符 */
-}
-
-.chroma .nb {
-    color: #2da44e !important; /* 绿色：内建/常用命令 */
-}
-
-.chroma .o,
-.chroma .ow {
-    color: #d29922 !important; /* 操作符/关键字操作词：琥珀色 */
-    font-weight: 600 !important;
-}
-
-/* 让数字更明显 */
-.chroma .m,
-.chroma .mi,
-.chroma .mo,
-.chroma .mf,
-.chroma .il {
-    color: #bc8cff !important; /* 淡紫色：数字 */
-}
-
-/* 将代码块角标改为显示语言（从 code 的 data-lang 读取） */
-.post-content pre {
-    position: relative !important;
-}
-
-.post-content pre > code::before {
-    content: attr(data-lang) !important;
-    position: absolute !important;
-    top: -10px !important;
-    right: 12px !important;
-    background: #0366d6 !important;
-    color: #fff !important;
-    padding: 2px 8px !important;
-    border-radius: 4px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-}
-
-.dark .post-content pre > code::before {
-    background: #58a6ff !important;
-    color: #0d1117 !important;
-}
-
-/* 覆盖之前的“代码块”角标（如果存在） */
-.post-content pre::before { content: none !important; }
-
-/* 更鲜艳的语法高亮覆盖 */
-.chroma .k, .chroma .kc, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt {
-    color: var(--code-keyword) !important;
-    font-weight: 700 !important;
-}
-
-.chroma .s, .chroma .s1, .chroma .s2, .chroma .sb, .chroma .sc,
-.chroma .sd, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx, .chroma .sr, .chroma .ss {
-    color: var(--code-string) !important;
-}
-
-.chroma .nf, .chroma .fm, .chroma .na {
-    color: var(--code-function) !important;
-}
-
-.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo {
-    color: var(--code-number) !important;
-}
-
-.chroma .nb, .chroma .bp, .chroma .nt, .chroma .nn, .chroma .no,
-.chroma .nd, .chroma .ne, .chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm, .chroma .py {
-    color: var(--code-builtin) !important;
-}
-
-/* 操作符/标点稍作强调，辅以粉系 */
-.chroma .o, .chroma .ow, .chroma .p {
-    color: #f472b6 !important;
-}
-
-/* 注释稍加强对比 */
-.chroma .c, .chroma .ch, .chroma .cm, .chroma .c1, .chroma .cs, .chroma .cp, .chroma .cpf {
-    color: var(--code-comment) !important;
-    font-style: italic !important;
-}
-
-/* 隐藏代码块语言角标 */
-.post-content pre > code::before {
-    content: none !important;
-    display: none !important;
-}
-
-/* 进一步增强纯命令（bash/shell）的配色 */
-/* 变量（$var、位置参数等）——亮黄 */
-.chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm {
-    color: #eab308 !important;
-    font-weight: 700 !important;
-}
-
-/* 选项/属性名（很多 lexer 会把 --long-option/-o 识别到 .na/.nd）——淡紫 */
-.chroma .na, .chroma .nd {
-    color: #a78bfa !important;
-}
-
-/* 内置命令/关键命令（echo, cd 等）——橙色已设，提升权重 */
-.chroma .nb, .chroma .bp {
-    color: var(--code-builtin) !important;
-    font-weight: 700 !important;
-}
-
-/* 可能被归到普通名称（外部命令如 du/sort/head/find）——亮蓝 */
-.chroma .n, .chroma .nx, .chroma .nn, .chroma .nt {
-    color: #1f6feb !important;
-}
-
-/* 管道/重定向/操作符——玫红并加粗 */
-.chroma .o, .chroma .ow, .chroma .p {
-    color: #f472b6 !important;
-    font-weight: 700 !important;
-}
-</style>
-
-<style>
-/* 轻量级命令行着色增强 - 颜色定义 */
+/* 命令行着色增强 */
 .tk-cmd { color: #1f6feb !important; font-weight: 700 !important; }
 .tk-prefix { color: #0ea5e9 !important; font-weight: 700 !important; }
 .tk-opt { color: #a78bfa !important; }
 .tk-path { color: #10b981 !important; }
 .tk-op { color: #f43f5e !important; font-weight: 700 !important; }
 .tk-num, .tk-ip { color: #8b5cf6 !important; }
-</style>
 
-<style>
-/* 紧凑代码块左右内边距（略微左移） */
-.post-content div.highlight { padding: 12px 14px 12px 10px !important; }
-/* 确保pre本身无额外左侧空隙 */
-.post-content div.highlight pre,
-.post-content div.highlight pre code { margin-left: 0 !important; }
-</style>
+/* ========== 表格和列表样式 ========== */
+/* 调整列表项间距和布局 */
+.post-content ol, .post-content ul { margin-top: 0em !important; margin-left: 0.8em !important; margin-bottom: 1.5em !important; }
+.post-content li { margin-top: 2px !important; margin-bottom: 10px !important; line-height: 1.4 !important; padding: 8px 0 !important; }
+.post-content p + ol, .post-content p + ul { margin-top: 0em !important; }
 
-<style>
-/* 调整列表项间距 - 减小上下间距 */
-.post-content ol,
-.post-content ul {
-    margin-top: 0em !important;
-    margin-left: 0.8em !important;
-    margin-bottom: 1.5em !important;
+/* 增加表格列间距和行间距，提高可读性 */
+.post-content table td { padding: 5px 80px 5px 30px !important; line-height: 1.6 !important; white-space: nowrap !important; }
+.post-content table th { padding: 10px 30px 10px 30px !important; line-height: 1.6 !important; white-space: nowrap !important; }
+.post-content table { margin: 0.2em 0 1.6em 0 !important; border-spacing: 25px 8px !important; }
+
+/* ========== 响应式布局 ========== */
+/* 超宽屏显示器优化，确保内容不会过度拉伸 */
+@media screen and (min-width: 1600px) {
+    .main { max-width: calc(1300px + 48px) !important; }
+    .nav { max-width: calc(1300px + 48px) !important; }
+    .post-content-container { gap: 3rem !important; }
+    .toc-sidebar { flex: 0 0 280px !important; }
 }
 
-.post-content li {
-    margin-top: 2px !important;
-    margin-bottom: 10px !important;
-    line-height: 1.4 !important;
-    padding: 8px 0 !important;
+@media screen and (min-width: 1920px) {
+    .main { max-width: calc(1500px + 48px) !important; }
+    .nav { max-width: calc(1500px + 48px) !important; }
+    .post-content-container { gap: 4rem !important; }
+    .toc-sidebar { flex: 0 0 300px !important; }
 }
 
-/* 确保列表和上方文本之间有适当间距 */
-.post-content p + ol,
-.post-content p + ul {
-    margin-top: 0em !important;
+@media screen and (min-width: 2560px) {
+    .main { max-width: calc(1700px + 48px) !important; }
+    .nav { max-width: calc(1700px + 48px) !important; }
+    .post-content-container { gap: 5rem !important; }
+    .toc-sidebar { flex: 0 0 320px !important; }
 }
 
-/* 增加表格列间距和行间距 */
-.post-content table td {
-    padding: 5px 80px 5px 30px !important;
-    line-height: 1.6 !important;
-    white-space: nowrap !important;
+/* 确保在超宽屏上内容不会过于拉伸 */
+@media screen and (min-width: 1600px) {
+    .post-content { max-width: 100% !important; line-height: 1.8 !important; }
+    .post-content p { max-width: 100% !important; }
+    .post-content img { max-width: 100% !important; height: auto !important; }
+    .post-content figure { max-width: 100% !important; }
 }
 
-.post-content table th {
-    padding: 10px 30px 10px 30px !important;
-    line-height: 1.6 !important;
-    white-space: nowrap !important;
+/* ========== 首页专用样式 ========== */
+/* 重要说明：Hugo PaperMod主题的首页使用 class="list" 而不是 class="home" */
+/* 排除terms和archives页面，确保只对真正的首页生效 */
+
+/* 首页背景图片和半透明层 - 仅大屏幕生效 */
+@media screen and (min-width: 769px) {
+    body.list:not(.terms):not(.archives) {
+        background-image: url('/images/background/homepage/light_mode.jpeg') !important;
+        background-size: cover !important; 
+        background-position: center !important;
+        background-attachment: fixed !important; 
+        background-repeat: no-repeat !important;
+        min-height: 100vh !important;
+    }
+    
+    body.list:not(.terms):not(.archives).dark {
+        background-image: url('/images/background/homepage/dark_mode.jpeg') !important;
+    }
+
+    /* 半透明遮罩层 */
+    body.list:not(.terms):not(.archives)::before {
+        content: '' !important; 
+        position: fixed !important; 
+        top: 0 !important; 
+        left: 0 !important;
+        width: 100% !important; 
+        height: 100% !important; 
+        /* 浅色模式半透明背景 透明度从0.88到0.86 */
+        background-color: rgba(208, 208, 208, 0.86) !important;
+        z-index: 0 !important; 
+        pointer-events: none !important;
+    }
+
+    /* 深色模式半透明背景 透明度从0.741到0.66 */
+    body.dark.list:not(.terms):not(.archives)::before {
+        background-color: rgba(0, 0, 0, 0.66) !important;
+    }
 }
 
-/* 增加表格整体间距 */
-.post-content table {
-    margin: 0.2em 0 1.6em 0 !important;
-    border-spacing: 25px 8px !important;
-}
-
-/* 首页背景图片设置 */
-body.home,
-body.list:not(.terms):not(.archives) {
-    background-image: url('/images/background/homepage/light_mode.jpeg') !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-attachment: fixed !important;
-    background-repeat: no-repeat !important;
-    min-height: 100vh !important;
-}
-
-/* 半透明背景与背景图片一样大 */
-body.home::before,
-body.list:not(.terms):not(.archives)::before {
-    content: '' !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    background-color: rgba(208, 208, 208, 0.881) !important;
-    z-index: 0 !important;
-    pointer-events: none !important;
-}
-
-/* 深色模式下的半透明背景 */
-body.dark.home::before,
-body.dark.list:not(.terms):not(.archives)::before {
-    background-color: rgba(0, 0, 0, 0.741) !important;
-}
-
-/* 确保内容在黑色半透明背景之上 */
-.main, .footer {
-    position: relative !important;
-    z-index: 1 !important;
+/* 首页布局和文章居中 - 关键样式 */
+/* 使用高优先级选择器确保覆盖主题默认样式 */
+html body.list:not(.terms):not(.archives) .main {
+    min-height: 100vh !important; 
     background-color: transparent !important;
-}
-
-/* 导航栏固定在顶端 */
-.header {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
+    margin: 60px 0 0 !important; /* 减少顶部margin从120px到60px */
+    width: 100% !important; 
     max-width: 100% !important;
-    z-index: 1000 !important;
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    backdrop-filter: blur(10px) !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+    padding: 20px 20px !important; /* 减少顶部padding从40px到20px */
     box-sizing: border-box !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    display: flex !important; 
+    flex-direction: column !important; 
+    align-items: center !important;
 }
 
-/* 深色模式导航栏 */
-body.dark .header {
-    background-color: rgba(30, 30, 30, 0.9) !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* 为固定导航栏留出空间 */
-.main {
-    margin-top: 120px !important;
-}
-
-/* 为整个首页添加全屏半透明背景 */
-body.home .main {
-    min-height: 100vh !important;
-    background-color: transparent !important;
-    margin: 0 !important;
+/* 首页文章条目标题和内容居中 */
+html body.list:not(.terms):not(.archives) .main .post-entry {
+    max-width: 1300px !important; /* 增加宽度从800px到1000px */
     width: 100% !important;
-    max-width: 100% !important;
-    padding: 40px 20px !important;
-    box-sizing: border-box !important;
-}
-
-body.home.dark .main {
-    background-color: transparent !important;
-}
-
-/* 深色模式背景图片 */
-body.home.dark,
-body.list:not(.terms):not(.archives).dark {
-    background-image: url('/images/background/homepage/dark_mode.jpeg') !important;
-}
-
-/* 确保内容在背景之上 */
-.main,
-.page-header,
-.post-entry,
-.footer,
-.nav {
-    position: relative !important;
-    z-index: 1 !important;
-}
-
-/* 为整个页面内容区域添加半透明背景以确保可读性 */
-.main {
-    background-color: transparent !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    min-height: 100vh !important;
-    width: 100% !important;
-    padding: 40px 20px !important;
-    box-sizing: border-box !important;
-}
-
-body.dark .main {
-    background-color: transparent !important;
-}
-
-/* 确保首页文章列表区域也有半透明背景 */
-.list .main {
-    background-color: transparent !important;
-    padding: 40px 20px !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    min-height: 100vh !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-body.dark .list .main {
-    background-color: transparent !important;
-}
-
-/* 为文章条目添加背景 */
-.post-entry {
+    margin: 0 auto 1.5rem auto !important; /* 减小高度：减小底部间距从2rem到1.5rem */
+    text-align: center !important;
     background-color: rgba(255, 255, 255, 0.2) !important;
     backdrop-filter: blur(0px) !important;
+    /* 确保完全居中 */
+    left: 0 !important; 
+    right: 0 !important;
+    position: relative !important;
 }
 
-body.dark .post-entry {
-    background-color: rgba(40, 40, 40, 0.2) !important;
+/* 首页文章内部元素居中 */
+html body.list:not(.terms):not(.archives) .main .post-entry .entry-header,
+html body.list:not(.terms):not(.archives) .main .post-entry .entry-content,
+html body.list:not(.terms):not(.archives) .main .post-entry .entry-footer {
+    text-align: center !important;
+    /* 确保内容完全居中 */
+    margin-left: auto !important; 
+    margin-right: auto !important;
+    display: block !important;
+}
+
+/* 减小首页文章内部元素的间距 */
+html body.list:not(.terms):not(.archives) .main .post-entry .entry-header {
+    margin-bottom: 0.8rem !important; /* 减小标题底部间距 */
+}
+
+html body.list:not(.terms):not(.archives) .main .post-entry .entry-content {
+    margin-bottom: 0.8rem !important; /* 减小内容底部间距 */
+    line-height: 1.5 !important; /* 调整行高 */
+    /* 限制显示为两行文字 */
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-height: 3em !important; /* 1.5行高 × 2行 = 3em */
+}
+
+html body.list:not(.terms):not(.archives) .main .post-entry .entry-footer {
+    margin-bottom: 0 !important; /* 移除底部间距 */
+}
+
+/* 首页分页居中 */
+html body.list:not(.terms):not(.archives) .main .pagination {
+    display: flex !important; 
+    justify-content: center !important; 
+    width: 100% !important; 
+    margin-top: 2rem !important;
+}
+
+/* 深色模式下的首页文章背景 */
+body.dark.list:not(.terms):not(.archives) .main .post-entry { 
+    background-color: rgba(40, 40, 40, 0.2) !important; 
 }
 
 /* 首页封面图片响应式显示 */
+/* 小屏幕显示封面图片 */
 @media screen and (max-width: 768px) {
-    /* 小屏幕显示封面图片 */
-    .entry-cover {
-        display: block !important;
+    body.list:not(.terms):not(.archives) .entry-cover { 
+        display: block !important; 
     }
-    
-    .entry-cover img {
-        max-width: 100% !important;
-        height: auto !important;
-        margin: 0 auto !important;
-        display: block !important;
+    body.list:not(.terms):not(.archives) .entry-cover img { 
+        max-width: 100% !important; 
+        height: auto !important; 
+        margin: 0 auto !important; 
+        display: block !important; 
     }
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-    /* 中等屏幕显示封面图片但尺寸适中 */
-    .entry-cover {
-        display: block !important;
+/* 大屏幕隐藏封面图片 */
+@media screen and (min-width: 769px) {
+    body.list:not(.terms):not(.archives) .entry-cover { 
+        display: none !important; 
     }
-    
-    .entry-cover img {
-        max-width: 98% !important;
-        height: auto !important;
-        margin: 0 auto !important;
-        display: block !important;
+    body.list:not(.terms):not(.archives) .entry-header h2 { 
+        font-size: 28px !important; 
+        line-height: 1.4 !important; 
     }
-}
-
-@media screen and (min-width: 1025px) {
-    /* 大屏幕隐藏封面图片 */
-    .entry-cover {
-        display: none !important;
-    }
-    
-    /* 大屏幕放大文字内容以补偿空间 */
-    .entry-header h2 {
-        font-size: 28px !important;
-        line-height: 1.4 !important;
-    }
-    
-    .entry-content {
-        font-size: 16px !important;
-        line-height: 1.7 !important;
+    body.list:not(.terms):not(.archives) .entry-content { 
+        font-size: 16px !important; 
+        line-height: 1.5 !important; /* 统一行高为1.5 */
         margin: 12px 0 !important;
+        /* 限制显示为两行文字 */
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-height: 3em !important; /* 1.5行高 × 2行 = 3em */
     }
-    
-    .entry-footer {
-        font-size: 14px !important;
+    body.list:not(.terms):not(.archives) .entry-footer { 
+        font-size: 14px !important; 
     }
-    
-    /* 增加文章条目间距以提升可读性 */
-    .post-entry {
-        margin-bottom: 2rem !important;
-        padding: 1.5rem !important;
+    body.list:not(.terms):not(.archives) .post-entry { 
+        margin-bottom: 1.5rem !important; /* 减小底部间距 */
+        padding: 1.2rem !important; /* 减小内边距 */
     }
 }
 
-/* 超大屏幕进一步优化 */
+/* 超大屏幕字体优化 */
 @media screen and (min-width: 1600px) {
-    .entry-header h2 {
-        font-size: 30px !important;
+    body.list:not(.terms):not(.archives) .entry-header h2 { 
+        font-size: 30px !important; 
     }
-    
-    .entry-content {
-        font-size: 17px !important;
+    body.list:not(.terms):not(.archives) .entry-content { 
+        font-size: 17px !important; 
+        line-height: 1.5 !important; /* 统一行高为1.5 */
+        /* 限制显示为两行文字 */
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-height: 3.4em !important; /* 1.7行高 × 2行 = 3.4em */
     }
-    
-    .post-entry {
-        margin-bottom: 2.5rem !important;
-        padding: 2rem !important;
+    body.list:not(.terms):not(.archives) .post-entry { 
+        margin-bottom: 2rem !important; /* 减小底部间距 */
+        padding: 1.5rem !important; /* 减小内边距 */
     }
+}
+
+/* ========== 通用页面样式 ========== */
+/* 导航栏固定在顶端 */
+.header {
+    position: fixed !important; 
+    top: 0 !important; 
+    left: 0 !important; 
+    right: 0 !important;
+    width: 100% !important; 
+    max-width: 100% !important; 
+    z-index: 1000 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px) !important; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+    box-sizing: border-box !important; 
+    padding: 0 !important; 
+    margin: 0 !important;
+}
+
+body.dark .header {
+    background-color: rgba(30, 30, 30, 0.88) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 通用内容区域样式 */
+.main, .footer {
+    position: relative !important; 
+    z-index: 1 !important; 
+    background-color: transparent !important;
+}
+
+/* 非首页的内容区域样式 */
+body:not(.list) .main {
+    background-color: transparent !important; 
+    border-radius: 0 !important;
+    margin: 120px 0 0 !important; 
+    min-height: 100vh !important;
+    width: 100% !important; 
+    padding: 40px 20px !important; 
+    box-sizing: border-box !important;
+}
+
+body.dark .main { 
+    background-color: transparent !important; 
+}
+
+/* 列表页面（非首页）的样式 */
+.list .main {
+    background-color: transparent !important; 
+    padding: 40px 20px !important;
+    border-radius: 0 !important; 
+    margin: 120px 0 0 !important;
+    min-height: 100vh !important; 
+    width: 100% !important; 
+    box-sizing: border-box !important;
+}
+
+body.dark .list .main { 
+    background-color: transparent !important; 
+}
+
+/* 通用文章条目样式 - 仅对非首页生效 */
+/* 重要：使用:not(.list)避免覆盖首页样式 */
+body:not(.list) .post-entry {
+    background-color: rgba(255, 255, 255, 0.2) !important; 
+    backdrop-filter: blur(0px) !important;
+}
+
+body.dark:not(.list) .post-entry { 
+    background-color: rgba(40, 40, 40, 0.2) !important; 
+}
+
+/* ========== 层级管理 ========== */
+/* 确保各元素的正确层级，避免遮挡问题 */
+.main, .page-header, .post-entry, .footer, .nav {
+    position: relative !important; 
+    z-index: 1 !important;
 }
 </style>
 
-<!-- 目录自动聚焦脚本 -->
+<!-- ========== 目录自动聚焦脚本 ========== -->
+<!-- 功能: 当用户滚动页面时，自动高亮目录中对应的标题，并自动滚动到可见位置 -->
 <script>
 (function() {
     function initTocAutoFocus() {
-        // 获取所有标题元素
         const headings = document.querySelectorAll('.post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6');
         const tocLinks = document.querySelectorAll('.toc a');
         
         if (headings.length === 0 || tocLinks.length === 0) return;
         
-        // 清除所有高亮
         function clearHighlights() {
             tocLinks.forEach(link => {
-                link.style.backgroundColor = '';
-                link.style.color = '';
-                link.style.padding = '';
+                link.style.backgroundColor = ''; 
+                link.style.color = ''; 
+                link.style.padding = ''; 
                 link.style.borderRadius = '';
             });
         }
         
-        // 高亮指定索引的链接
         function highlightLink(index) {
             clearHighlights();
             if (tocLinks[index]) {
-                tocLinks[index].style.backgroundColor = '#0366d6';
+                tocLinks[index].style.backgroundColor = '#0366d6'; 
                 tocLinks[index].style.color = 'white';
-                tocLinks[index].style.padding = '2px 6px';
+                tocLinks[index].style.padding = '2px 6px'; 
                 tocLinks[index].style.borderRadius = '4px';
-                
-                // 自动滚动目录以显示高亮的链接
                 scrollToTocLink(tocLinks[index]);
             }
         }
         
-        // 目录自动滚动到指定链接
         function scrollToTocLink(link) {
-            // 查找可滚动的容器
+            // 尝试多个可能的容器选择器，提高兼容性
             const possibleContainers = [
-                link.closest('.toc'),
-                link.closest('.toc-sidebar'),
-                link.closest('.inner'),
-                link.closest('aside'),
+                link.closest('.toc'), 
+                link.closest('.toc-sidebar'), 
+                link.closest('.inner'), 
+                link.closest('aside'), 
                 link.parentElement
             ];
-            
             let tocContainer = null;
             for (const container of possibleContainers) {
                 if (container && container.scrollHeight > container.clientHeight) {
                     const style = window.getComputedStyle(container);
-                    if (style.overflow === 'auto' || style.overflow === 'scroll' || 
-                        style.overflowY === 'auto' || style.overflowY === 'scroll') {
-                        tocContainer = container;
+                    if (style.overflow === 'auto' || style.overflow === 'scroll' || style.overflowY === 'auto' || style.overflowY === 'scroll') {
+                        tocContainer = container; 
                         break;
                     }
                 }
             }
-            
             if (!tocContainer) return;
             
-            const linkRect = link.getBoundingClientRect();
+            const linkRect = link.getBoundingClientRect(); 
             const containerRect = tocContainer.getBoundingClientRect();
-            
-            // 计算链接在容器中的相对位置
             const linkTop = linkRect.top - containerRect.top + tocContainer.scrollTop;
-            const linkBottom = linkTop + linkRect.height;
+            const linkBottom = linkTop + linkRect.height; 
             const containerHeight = containerRect.height;
-            
-            // 计算目标滚动位置
             let targetScrollTop = tocContainer.scrollTop;
             
+            // 计算目标滚动位置，确保链接在可视区域内
             if (linkTop < tocContainer.scrollTop + 20) {
-                // 链接在可视区域顶部上方，向上滚动
                 targetScrollTop = Math.max(0, linkTop - 20);
             } else if (linkBottom > tocContainer.scrollTop + containerHeight - 20) {
-                // 链接在可视区域底部下方，向下滚动
                 targetScrollTop = Math.min(tocContainer.scrollHeight - containerHeight, linkBottom - containerHeight + 20);
             }
             
-            // 执行滚动
+            // 如果需要滚动，则执行滚动
             if (Math.abs(targetScrollTop - tocContainer.scrollTop) > 5) {
                 tocContainer.scrollTop = targetScrollTop;
             }
         }
         
-        // 滚动检测函数
         function checkScroll() {
             const scrollPosition = window.scrollY + 100;
-            
-            // 找到当前最接近的标题
-            let currentIndex = -1;
+            let currentIndex = -1; 
             let closestDistance = Infinity;
             
             headings.forEach((heading, index) => {
-                const headingTop = heading.offsetTop;
+                const headingTop = heading.offsetTop; 
                 const distance = Math.abs(scrollPosition - headingTop);
-                
-                if (distance < closestDistance && scrollPosition >= headingTop) {
-                    closestDistance = distance;
-                    currentIndex = index;
+                if (distance < closestDistance && scrollPosition >= headingTop) { 
+                    closestDistance = distance; 
+                    currentIndex = index; 
                 }
             });
             
-            // 如果没有找到，高亮第一个
             if (currentIndex === -1 && headings.length > 0) {
                 currentIndex = 0;
             }
-            
             if (currentIndex >= 0) {
                 highlightLink(currentIndex);
             }
         }
         
-        // 节流函数
+        // 节流函数，避免频繁触发
         function throttle(func, limit) {
-            let inThrottle;
+            let inThrottle; 
             return function() {
-                const args = arguments;
+                const args = arguments; 
                 const context = this;
-                if (!inThrottle) {
-                    func.apply(context, args);
-                    inThrottle = true;
-                    setTimeout(() => inThrottle = false, limit);
+                if (!inThrottle) { 
+                    func.apply(context, args); 
+                    inThrottle = true; 
+                    setTimeout(() => inThrottle = false, limit); 
                 }
             }
         }
         
         // 监听滚动事件
-        window.addEventListener('scroll', throttle(checkScroll, 150));
-        
-        // 初始化时检查一次
+        window.addEventListener('scroll', throttle(checkScroll, 150)); 
         checkScroll();
         
-        // 处理点击事件
+        // 点击目录链接时平滑滚动到对应标题
         tocLinks.forEach((link, index) => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
+                e.preventDefault(); 
                 const targetId = link.getAttribute('href').substring(1);
                 const targetElement = document.getElementById(targetId);
-                
                 if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    targetElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
                     });
                 }
             });
         });
     }
     
-    // 等待DOM完全加载
+    // 确保页面完全加载后再初始化
     if (document.readyState === 'complete') {
         setTimeout(initTocAutoFocus, 500);
     } else {
-        window.addEventListener('load', () => {
-            setTimeout(initTocAutoFocus, 500);
-        });
+        window.addEventListener('load', () => setTimeout(initTocAutoFocus, 500));
     }
 })();
 </script>
-
