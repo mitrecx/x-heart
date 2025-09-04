@@ -102,26 +102,26 @@ html body .post-content *::-webkit-scrollbar {
 
 /* 优化列表和段落间距 */
 .post-content p {
-    margin-bottom: 0.5em !important;
+    margin-bottom: 0.1em !important;
 }
 
 .post-content ol,
 .post-content ul {
-    margin-top: 1.5em !important;
-    margin-bottom: 2em !important;
+    margin-top: 0.1em !important;
+    margin-bottom: 0.4em !important;
 }
 
 .post-content li {
-    margin-top: 30px !important;
-    margin-bottom: 30px !important;
-    line-height: 2.2 !important;
-    padding: 12px 0 !important;
+    margin-top: 2px !important;
+    margin-bottom: 4px !important;
+    line-height: 1.5 !important;
+    padding: 4px 0 !important;
 }
 
 /* 确保列表和上方文本之间有适当间距 */
 .post-content p + ol,
 .post-content p + ul {
-    margin-top: 1em !important;
+    margin-top: 0.4em !important;
 }
 
 /* 优化图片和文本之间的间距 */
@@ -205,4 +205,10 @@ html body .post-content *::-webkit-scrollbar {
 
 .post-single .post-header .post-cover {
     display: none !important;
+}
+
+/* 加深代码块中类名的颜色，提高可读性 */
+.chroma .nc {
+    color: #ff8c00 !important; /* 深橙色，更加醒目易读 */
+    font-weight: 700 !important; /* 进一步增加字体粗细 */
 }
