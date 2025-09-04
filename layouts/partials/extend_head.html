@@ -92,6 +92,70 @@
     } catch(e) { /* 忽略失败，保持原样 */ }
   }
 
+  // 新增：高亮 Bash for 语句中的关键字 `in`
+  function highlightForInKeyword(line) {
+    try {
+      var raw = line.textContent;
+      if (!raw) return;
+      // 仅匹配形如: for <var> in ... 的结构（避免匹配字符串、变量名中的 in）
+      var re = /\bfor\b[\s]+[A-Za-z_][A-Za-z0-9_]*[\s]+(in)\b/;
+      var m = re.exec(raw);
+      if (!m) return;
+      var target = m[1];
+      var start = m.index + m[0].indexOf(target);
+      var end = start + target.length;
+
+      // 本地化工具（与上面同名工具独立实现，避免跨作用域引用）
+      function collectTextNodes(root, out) {
+        out = out || [];
+        root.childNodes.forEach(function(n){
+          if (n.nodeType === 3) out.push(n);
+          else collectTextNodes(n, out);
+        });
+        return out;
+      }
+      function locateByOffset(root, offset) {
+        var nodes = collectTextNodes(root);
+        var acc = 0;
+        for (var i=0;i<nodes.length;i++) {
+          var t = nodes[i];
+          var len = t.nodeValue.length;
+          if (offset <= acc + len) {
+            return { node: t, inner: offset - acc };
+          }
+          acc += len;
+        }
+        return null;
+      }
+      function inStringOrComment(node) {
+        for (var n = node; n && n !== line; n = n.parentNode) {
+          if (n.nodeType === 1) {
+            var cls = n.className || '';
+            if (/\b(s|s1|s2|s3|s4|c|c1|cm|c1m)\b/.test(cls)) return true;
+          }
+        }
+        return false;
+      }
+
+      var startLoc = locateByOffset(line, start);
+      var endLoc = locateByOffset(line, end);
+      if (!startLoc || !endLoc) return;
+      if (inStringOrComment(startLoc.node) || inStringOrComment(endLoc.node)) return;
+
+      // 若已被标记为关键字，则不重复处理
+      var parentEl = startLoc.node.parentNode;
+      if (parentEl && parentEl.nodeType === 1 && /\bk\b/.test(parentEl.className || '')) return;
+
+      var range = document.createRange();
+      range.setStart(startLoc.node, startLoc.inner);
+      range.setEnd(endLoc.node, endLoc.inner);
+      var kw = document.createElement('span');
+      // 使用 chroma 的关键字类名，确保复用现有CSS（包括我们自定义的紫色样式）
+      kw.className = 'k tk-in';
+      range.surroundContents(kw);
+    } catch(e) { /* 安静失败，避免破坏渲染 */ }
+  }
+
   function enhanceShellBlocks() {
     var blocks = document.querySelectorAll('code.language-bash, code.language-sh');
     var PREFIX = /^(sudo|doas|time|command|nice|ionice|env)$/;
@@ -105,6 +169,8 @@
         if (line.querySelector('span:not(.cl)')) {
           // 已有部分token：为首个命令词（及sudo等前缀后的下一个命令）补充高亮
           wrapFirstCommandWord(line);
+          // 新增：即使已有Chroma标记，也补充 for-in 的 `in` 关键字高亮
+          highlightForInKeyword(line);
           return;
         }
         // 否则进行完整的切分高亮
@@ -134,6 +200,8 @@
         });
         line.textContent = '';
         line.appendChild(frag);
+        // 新增：在切分高亮后再补充 for-in 的 `in` 关键字高亮
+        highlightForInKeyword(line);
       });
     });
   }

@@ -207,8 +207,123 @@ html body .post-content *::-webkit-scrollbar {
     display: none !important;
 }
 
-/* 加深代码块中类名的颜色，提高可读性 */
+/* 代码高亮颜色优化 - 高饱和度鲜艳配色方案 */
+/* 使用更高的CSS优先级覆盖主题默认样式 */
+
+/* 关键字 - 使用鲜艳的紫色 - 覆盖主题默认 */
+body .chroma .k, 
+body .chroma .kp, 
+body .chroma .kr, 
+body .chroma .kn, 
+body .chroma .kc {
+    color: #8b5cf6 !important; /* 鲜艳紫色 */
+    font-weight: 600 !important;
+}
+
+/* 字符串插值 - 确保变量在字符串中正确显示 */
+body .chroma .si {
+    color: #10b981 !important; /* 绿色字符串颜色 */
+    font-weight: 500 !important;
+}
+
+/* 变量名 - 确保不被误识别为关键字 */
+body .chroma .nv, 
+body .chroma .vc, 
+body .chroma .vg, 
+body .chroma .vi, 
+body .chroma .vm {
+    color: #ec4899 !important; /* 鲜艳粉色 - 变量颜色 */
+    font-weight: 500 !important;
+}
+
+/* 字符串插值中的变量保持字符串颜色 */
+body .chroma .si .nv, 
+body .chroma .si .vc, 
+body .chroma .si .vg, 
+body .chroma .si .vi, 
+body .chroma .si .vm {
+    color: #10b981 !important; /* 保持绿色字符串颜色 */
+    font-weight: 500 !important;
+}
+
+/* 强制覆盖主题中可能的变量样式 */
+body .chroma span[class*="nv"],
+body .chroma span[class*="vc"],
+body .chroma span[class*="vg"],
+body .chroma span[class*="vi"],
+body .chroma span[class*="vm"] {
+    color: #ec4899 !important; /* 确保变量显示为粉色 */
+    font-weight: 500 !important;
+}
+
+/* 关键字声明和类型 - 使用鲜艳的红色 */
+.chroma .kd, .chroma .kt {
+    color: #ef4444 !important; /* 鲜艳红色 */
+    font-weight: 600 !important;
+}
+
+/* 字符串 - 使用鲜艳的绿色 */
+.chroma .s, .chroma .s1, .chroma .s2, .chroma .sb, .chroma .sc, .chroma .si, .chroma .sx {
+    color: #10b981 !important; /* 鲜艳绿色 */
+    font-weight: 500 !important;
+}
+
+/* 数字 - 使用鲜艳的橙色 */
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo {
+    color: #f59e0b !important; /* 鲜艳橙色 */
+    font-weight: 600 !important;
+}
+
+/* 类名 - 使用鲜艳的橙红色 */
 .chroma .nc {
-    color: #ff8c00 !important; /* 深橙色，更加醒目易读 */
-    font-weight: 700 !important; /* 进一步增加字体粗细 */
+    color: #f97316 !important; /* 鲜艳橙红色 */
+    font-weight: 700 !important;
+}
+
+/* 函数名 - 使用鲜艳的蓝色 */
+.chroma .nf, .chroma .fm {
+    color: #3b82f6 !important; /* 鲜艳蓝色 */
+    font-weight: 600 !important;
+}
+
+/* 操作符 - 使用鲜艳的青色 */
+.chroma .o, .chroma .ow {
+    color: #06b6d4 !important; /* 鲜艳青色 */
+    font-weight: 700 !important;
+}
+
+/* 标点符号 - 使用中等灰色 */
+.chroma .p {
+    color: #6b7280 !important; /* 中等灰色 */
+    font-weight: 500 !important;
+}
+
+/* 注释 - 使用柔和但可见的灰色 */
+.chroma .c, .chroma .c1, .chroma .cm, .chroma .ch, .chroma .cs, .chroma .cp {
+    color: #9ca3af !important; /* 柔和灰色 */
+    font-style: italic;
+}
+
+/* 变量名 - 使用鲜艳的粉色 */
+.chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm {
+    color: #ec4899 !important; /* 鲜艳粉色 */
+    font-weight: 500 !important;
+}
+
+/* 内置函数和属性 - 使用鲜艳的靛蓝色 */
+.chroma .nb, .chroma .bp, .chroma .na {
+    color: #6366f1 !important; /* 鲜艳靛蓝色 */
+    font-weight: 500 !important;
+}
+
+/* 常量 - 使用鲜艳的黄绿色 */
+.chroma .no {
+    color: #84cc16 !important; /* 鲜艳黄绿色 */
+    font-weight: 600 !important;
+}
+
+/* 装饰器 - 使用鲜艳的玫瑰色 */
+.chroma .nd {
+    color: #f43f5e !important; /* 鲜艳玫瑰色 */
+    font-weight: 600 !important;
 }
