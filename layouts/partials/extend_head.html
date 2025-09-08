@@ -205,10 +205,55 @@
       });
     });
   }
+  // 新增：内联代码彩色增强（针对反引号内的内联 code）
+  function enhanceInlineCodes() {
+    var codes = document.querySelectorAll('.post-content code:not(pre code)');
+    codes.forEach(function(code){
+      var raw = code.textContent;
+      if (!raw || !raw.trim()) return;
+      var parts = raw.split(/(\s+)/);
+      var frag = document.createDocumentFragment();
+      var firstWordDone = false;
+      var KEYWORDS = /^(for|in|if|then|else|elif|fi|do|done|case|esac|while|until|return|exit|server|location|listen|root|index|proxy_pass|upstream)$/;
+      parts.forEach(function(part){
+        if (!part) return;
+        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+        var span = document.createElement('span');
+        if (/^(['"]).*\1$/.test(part) || ((part.startsWith('"') && part.endsWith('"')) || (part.startsWith("'") && part.endsWith("'")))) {
+          span.className = 'ic-string';
+        } else if (/^\$\{[^}]+\}$/.test(part) || /^\$[A-Za-z_][A-Za-z0-9_]*$/.test(part)) {
+          span.className = 'ic-var';
+        } else if (/^[-]{1,2}[A-Za-z0-9][A-Za-z0-9-]*$/.test(part)) {
+          span.className = 'tk-opt';
+        } else if (/^~?\/[\S]*$/.test(part)) {
+          span.className = 'tk-path';
+        } else if (/^\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?$/.test(part)) {
+          span.className = 'tk-ip';
+        } else if (/^\d+(?:\.\d+)?$/.test(part)) {
+          span.className = 'tk-num';
+        } else if (KEYWORDS.test(part)) {
+          span.className = 'ic-keyword';
+        } else if (!firstWordDone && /^[A-Za-z0-9._-]+$/.test(part)) {
+          span.className = 'tk-cmd';
+          firstWordDone = true;
+        } else {
+          frag.appendChild(document.createTextNode(part));
+          return;
+        }
+        span.textContent = part;
+        frag.appendChild(span);
+      });
+      code.textContent = '';
+      code.appendChild(frag);
+    });
+  }
+
+  // 初始化：在文档就绪时同时执行两套增强
+  function runEnhancers(){ enhanceShellBlocks(); enhanceInlineCodes(); }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', enhanceShellBlocks);
+    document.addEventListener('DOMContentLoaded', runEnhancers);
   } else {
-    enhanceShellBlocks();
+    runEnhancers();
   }
 })();
 </script>
@@ -226,6 +271,7 @@
     --code-function: #0ea5e9;
     --code-number: #8b5cf6;
     --code-builtin: #f59e0b;
+    --code-variable: #ec4899; /* 新增：变量颜色（浅色模式） */
 }
 
 .dark {
@@ -238,6 +284,7 @@
     --code-function: #8be9fd;
     --code-number: #bd93f9;
     --code-builtin: #ffa657;
+    --code-variable: #f472b6; /* 新增：变量颜色（深色模式） */
 }
 
 /* ========== 代码块样式 ========== */
@@ -280,14 +327,18 @@ div.highlight {
 
 /* 内联代码样式 */
 .post-content code:not(.chroma code):not(pre code) {
-    background: var(--code-bg) !important;
-    color: var(--content) !important;
-    padding: 2px 6px !important;
+    background: var(--code-bg-custom) !important; /* 与代码块背景变量一致，明暗自适应 */
+    color: var(--code-text-custom) !important;    /* 与代码块文字颜色一致，保证对比度 */
+    border: 1px solid var(--code-border-custom) !important;
     border-radius: 4px !important;
+    padding: 0.15em 0.45em !important;           /* 合理内边距，提升可读性 */
+    line-height: 1.25 !important;                /* 适度行间距，避免拥挤 */
+    font-weight: 700 !important;                 /* 加粗以满足需求 */
     font-size: 0.9em !important;
-    border: 1px solid var(--border) !important;
     font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !important;
 }
+/* 链接中的内联代码也保持高可读性 */
+.post-content a code { color: var(--code-text-custom) !important; }
 
 /* 语法高亮颜色 */
 .chroma .c, .chroma .c1, .chroma .cm, .chroma .cs { color: var(--code-comment) !important; font-style: italic !important; }
@@ -310,6 +361,23 @@ div.highlight {
 .tk-op { color: #f43f5e !important; font-weight: 700 !important; }
 .tk-num, .tk-ip { color: #8b5cf6 !important; }
 
+/* 新增：内联代码（反引号）彩色样式 */
+.post-content code .ic-keyword { color: var(--code-keyword) !important; font-weight: 700 !important; }
+.post-content code .ic-string  { color: var(--code-string)  !important; }
+.post-content code .ic-var     { color: var(--code-variable)!important; font-weight: 600 !important; }
+.chroma .nf, .chroma .fm { color: var(--code-function) !important; font-weight: bold !important; }
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .mo { color: var(--code-number) !important; }
+.chroma .nb, .chroma .bp { color: var(--code-builtin) !important; }
+.chroma * { background: transparent !important; }
+
+/* 命令行着色增强（已存在） */
+.tk-cmd { color: #1f6feb !important; font-weight: 700 !important; }
+.tk-prefix { color: #0ea5e9 !important; font-weight: 700 !important; }
+.tk-opt { color: #a78bfa !important; }
+.tk-path { color: #10b981 !important; }
+.tk-op { color: #f43f5e !important; font-weight: 700 !important; }
+.tk-num, .tk-ip { color: #8b5cf6 !important; }
+
 /* ========== 表格和列表样式 ========== */
 /* 调整列表项间距和布局 */
 .post-content ol, .post-content ul { margin-top: 0em !important; margin-left: 0.8em !important; margin-bottom: 1.5em !important; }
@@ -318,6 +386,24 @@ div.highlight {
 
 /* 增加表格列间距和行间距，提高可读性 */
 .post-content table td { padding: 5px 80px 5px 30px !important; line-height: 1.6 !important; white-space: nowrap !important; }
+
+/* ========== 引用块样式 ========== */
+/* 使用浅色柔和背景增强区分度，同时与整体设计相协调 */
+.post-content blockquote {
+  background: rgba(31, 41, 55, 0.04) !important; /* 浅石板蓝（light），不影响可读性 */
+  border-inline-start: 3px solid var(--primary) !important; /* 保留主题主色左边框 */
+  border-radius: 8px !important;
+  padding: 10px 14px !important; /* 增加上下内边距，配合背景更舒适 */
+  color: inherit !important;
+}
+.dark .post-content blockquote {
+  background: rgba(255, 255, 255, 0.06) !important; /* 深色模式下的柔和浅色叠加 */
+  border-inline-start-color: rgba(255, 255, 255, 0.25) !important;
+}
+/* 优化引用块内部段落的间距 */
+.post-content blockquote > p { margin: 0.5em 0 !important; }
+.post-content blockquote > :first-child { margin-top: 0 !important; }
+.post-content blockquote > :last-child { margin-bottom: 0 !important; }
 .post-content table th { padding: 10px 30px 10px 30px !important; line-height: 1.6 !important; white-space: nowrap !important; }
 .post-content table { margin: 0.2em 0 1.6em 0 !important; border-spacing: 25px 8px !important; }
 
