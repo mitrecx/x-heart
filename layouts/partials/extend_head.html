@@ -633,11 +633,26 @@ body.dark.list:not(.terms):not(.archives) .main .post-entry {
     box-sizing: border-box !important; 
     padding: 0 !important; 
     margin: 0 !important;
+    transition: transform 500ms ease, background-color 150ms ease, box-shadow 150ms ease !important;
+    will-change: transform;
 }
 
 body.dark .header {
     background-color: rgba(30, 30, 30, 0.88) !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 顶部导航智能隐藏状态 */
+.header.is-hidden { 
+    transform: translateY(-100%);
+    box-shadow: none !important;
+}
+body.dark .header.is-hidden { 
+    box-shadow: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .header { transition: none !important; }
 }
 
 /* 通用内容区域样式 */
@@ -828,6 +843,80 @@ body.dark:not(.list) .post-entry {
         setTimeout(initTocAutoFocus, 500);
     } else {
         window.addEventListener('load', () => setTimeout(initTocAutoFocus, 500));
+    }
+})();
+</script>
+
+<!-- ========== 顶部导航智能隐藏/显示 ========== -->
+<script>
+(function() {
+    function initSmartHeader() {
+        const header = document.querySelector('header.header');
+        if (!header) return;
+
+        // 仅在文章页面（非列表页）启用
+        const isArticlePage = document.body && !document.body.classList.contains('list');
+        if (!isArticlePage) return;
+
+        let lastY = window.scrollY;
+        let accumulated = 0; // 累计滚动距离，用于阈值判断，避免轻微抖动
+        const HIDE_THRESHOLD = 12; // 触发显隐的最小滚动变化（像素）
+        const MIN_SCROLL_TO_HIDE = 80; // 至少滚动到一定位置后才允许隐藏（像素）
+        let ticking = false;
+
+        function onScroll() {
+            const y = window.scrollY;
+            const delta = y - lastY; // 正值=向下，负值=向上
+            lastY = y;
+
+            // 当方向切换时重置累计量，避免来回小抖动
+            if ((delta > 0 && accumulated < 0) || (delta < 0 && accumulated > 0)) {
+                accumulated = 0;
+            }
+            accumulated += delta;
+
+            // 顶部强制显示
+            if (y <= 0) {
+                header.classList.remove('is-hidden');
+                accumulated = 0;
+                return;
+            }
+
+            // 忽略微小滚动，避免误触发
+            if (Math.abs(accumulated) < HIDE_THRESHOLD) return;
+
+            // 向下滚动且超过最小距离 -> 隐藏
+            if (accumulated > 0 && y > MIN_SCROLL_TO_HIDE) {
+                header.classList.add('is-hidden');
+                accumulated = HIDE_THRESHOLD; // 防止短时间内重复触发
+            } else if (accumulated < 0) {
+                // 向上滚动 -> 显示
+                header.classList.remove('is-hidden');
+                accumulated = -HIDE_THRESHOLD;
+            }
+        }
+
+        // 使用 rAF 进行节流，平衡性能与流畅度
+        function onScrollThrottled() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                onScroll();
+                ticking = false;
+            });
+        }
+
+        // 初始状态确保可见
+        header.classList.remove('is-hidden');
+
+        window.addEventListener('scroll', onScrollThrottled, { passive: true });
+        window.addEventListener('resize', () => header.classList.remove('is-hidden'));
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initSmartHeader();
+    } else {
+        document.addEventListener('DOMContentLoaded', initSmartHeader, { once: true });
     }
 })();
 </script>
