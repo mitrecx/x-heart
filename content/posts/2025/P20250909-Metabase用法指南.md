@@ -80,6 +80,7 @@ SELECT * FROM my_table WHERE month = {{month}}
 query builder 是 Metabase 提供的查询方式, 它的优点是: 
 - 不需要写 SQL 语句, 只需要点击鼠标就可以查询数据, 可以快速上手。
 - 支持 钻取(drill through) 功能。
+
 缺点:  
 - 复杂的过滤条件需要熟练掌握 [自定义表达式](https://www.metabase.com/docs/latest/questions/query-builder/expressions)才能写好。  
 

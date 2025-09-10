@@ -859,9 +859,8 @@ body.dark:not(.list) .post-entry {
         if (!isArticlePage) return;
 
         let lastY = window.scrollY;
-        let accumulated = 0; // 累计滚动距离，用于阈值判断，避免轻微抖动
-        const HIDE_THRESHOLD = 12; // 触发显隐的最小滚动变化（像素）
-        const MIN_SCROLL_TO_HIDE = 80; // 至少滚动到一定位置后才允许隐藏（像素）
+        let upAccum = 0; // 向上滚动累计距离（像素）
+        const SHOW_THRESHOLD_UP = 120; // 向上滚动至少该距离后再显示（像素）
         let ticking = false;
 
         function onScroll() {
@@ -869,34 +868,30 @@ body.dark:not(.list) .post-entry {
             const delta = y - lastY; // 正值=向下，负值=向上
             lastY = y;
 
-            // 当方向切换时重置累计量，避免来回小抖动
-            if ((delta > 0 && accumulated < 0) || (delta < 0 && accumulated > 0)) {
-                accumulated = 0;
-            }
-            accumulated += delta;
-
-            // 顶部强制显示
+            // 到达顶部：强制显示并重置累计
             if (y <= 0) {
                 header.classList.remove('is-hidden');
-                accumulated = 0;
+                upAccum = 0;
                 return;
             }
 
-            // 忽略微小滚动，避免误触发
-            if (Math.abs(accumulated) < HIDE_THRESHOLD) return;
-
-            // 向下滚动且超过最小距离 -> 隐藏
-            if (accumulated > 0 && y > MIN_SCROLL_TO_HIDE) {
+            if (delta > 0) {
+                // 向下滚动：立即隐藏
                 header.classList.add('is-hidden');
-                accumulated = HIDE_THRESHOLD; // 防止短时间内重复触发
-            } else if (accumulated < 0) {
-                // 向上滚动 -> 显示
-                header.classList.remove('is-hidden');
-                accumulated = -HIDE_THRESHOLD;
+                upAccum = 0; // 重置，避免短促上下抖动立即显示
+                return;
+            }
+
+            if (delta < 0) {
+                // 向上滚动：累计距离，超过阈值再显示
+                upAccum += -delta;
+                if (upAccum >= SHOW_THRESHOLD_UP) {
+                    header.classList.remove('is-hidden');
+                    upAccum = 0;
+                }
             }
         }
 
-        // 使用 rAF 进行节流，平衡性能与流畅度
         function onScrollThrottled() {
             if (ticking) return;
             ticking = true;
