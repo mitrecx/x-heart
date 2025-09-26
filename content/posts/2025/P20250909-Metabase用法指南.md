@@ -61,7 +61,7 @@ Metabase 的核心作用:
 
 
 ## native query
-native query 没啥好说的, 就是写 sql 语句: 
+native query 就是写 sql 语句: 
 - 优点: 对于后端开发来说, 写 SQL 是非常简单的。
 - 缺点: 不支持 钻取(drill through) 功能。
 
