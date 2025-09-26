@@ -1,5 +1,5 @@
 ---
-title: "Metabase 用法指南"
+title: "Metabase 指南"
 date: 2025-09-09T23:15:23+08:00
 draft: false
 tags: ["Metabase"]
