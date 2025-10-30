@@ -327,3 +327,11 @@ body .chroma span[class*="vm"] {
     color: #f43f5e !important; /* 鲜艳玫瑰色 */
     font-weight: 600 !important;
 }
+
+/* 调整四级标题字号 */
+.post-content h4 {
+    font-size: 1.2em !important; /* 原来可能是1.1em左右，现在调大到1.25em */
+    font-weight: 600 !important;
+    margin-top: 1.5em !important;
+    margin-bottom: 0.8em !important;
+}
