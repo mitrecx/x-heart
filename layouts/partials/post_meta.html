@@ -1,0 +1,17 @@
+{{- $scratch := newScratch }}
+
+{{- if not .Date.IsZero -}}
+{{- $scratch.Add "meta" (slice (.Date | time.Format "2006-01-02 15:04:05")) }}
+{{- end }}
+
+{{- if or .Params.author site.Params.author }}
+{{- $scratch.Add "meta" (slice (printf "%s" (partial "author.html" .))) }}
+{{- end }}
+
+{{- if (.Param "ShowWordCount") -}}
+{{- $scratch.Add "meta" (slice (printf "%d 字" .WordCount)) }}
+{{- end }}
+
+{{- with ($scratch.Get "meta") }}
+{{- delimit . "&nbsp;·&nbsp;" | safeHTML -}}
+{{- end -}}
