@@ -102,7 +102,7 @@ html body .post-content *::-webkit-scrollbar {
 
 /* 优化列表和段落间距 */
 .post-content p {
-    margin-bottom: 0.1em !important;
+    margin-bottom: 1em !important;
 }
 
 .post-content ol,
